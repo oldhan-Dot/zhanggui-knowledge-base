@@ -75,6 +75,7 @@ def step_2_scan_images(md_content:str, images_dir_obj:Path):
     return image_targets
 
 
+
 @node_log("node_md_img")
 def node_md_img(state: ImportGraphState) -> ImportGraphState:
     """
