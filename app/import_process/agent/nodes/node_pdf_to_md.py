@@ -260,5 +260,4 @@ def node_pdf_to_md(state: ImportGraphState) -> ImportGraphState:
 
     # 记录当前节点状态为已完成
     add_done_task(state["task_id"],"node_pdf_to_md")
-
     return state
