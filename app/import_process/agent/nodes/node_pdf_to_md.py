@@ -1,9 +1,9 @@
+import shutil
 import sys
 import time
+import zipfile
 from pathlib import Path
-
 import requests
-
 
 from app.conf.mineru_config import mineru_config
 from app.core.logger import logger, node_log, step_log, PROJECT_ROOT
@@ -183,8 +183,52 @@ def step_3_download_and_extract(zip_url : str, local_dir_obj : Path, stem :str):
     返回：最终MD文件的字符串格式绝对路径
     异常：RuntimeError(下载失败)、FileNotFoundError(无MD文件)
     """
-    #请求zip_url
-
+    #请求zip_url，下载压缩文件
+    response = requests.get(zip_url,timeout=120)
+    #判断状态码是否为200
+    if response.status_code != 200:
+        raise ValueError(f"下载压缩文件失败，状态码：{response.status_code}")
+    # 设置保存压缩文件路径，并保存压缩文件
+    zip_save_path = local_dir_obj / f"{stem}.zip"
+    zip_save_path.write_bytes(response.content)
+    #设置保存压缩文件后的解压文件的路径
+    extract_target_dir = local_dir_obj / stem
+    #判断extract_target_dir是否存在，若存在，先将文件之前的相关文件上传
+    if extract_target_dir.exists():
+        shutil.rmtree(extract_target_dir)
+    #创建extract_target_dir所对应的目录
+    #mkdir(parents = True,exist_ok = True)
+    #paents = True表示可以创建多层目录
+    #exist_ok = True表示目录存在也不会报错
+    extract_target_dir.mkdir(parents=True, exist_ok=True)
+    #解压缩文件
+    with zipfile.ZipFile(zip_url) as zip_file:
+        zip_file.extractall(extract_target_dir)
+    #获取extract_target_dir文件下的所有md文件
+    md_file_list = list(extract_target_dir.rglob("*.md"))
+    #判断md_file_list是否为空
+    if not md_file_list:
+        raise RuntimeError("解压后的结果中没有任何的md文件")
+    #获取pdf转换的md文件
+    target_md_file = None
+    #先获取extract_target_dir中与原pdf文件标题一致的md文件
+    for md_file in md_file_list:
+        if md_file.stem ==stem:
+            target_md_file = md_file
+            break
+    #若extract_target_dir中没有与原pdf文件标题一致的md文件，再找full.md
+    if not target_md_file:
+        for md_file in md_file_list:
+            if md_file.name == "full.md":
+                target_md_file = md_file
+                break
+    #若extract_target_dir中没有与原pdf文件标题一致的md文件,也没有full.md,直接获取md文件列表中的第一个文件
+    if not target_md_file:
+        target_md_file = md_file_list[0]
+    #判断最终获取的md文件的标题是否是stem，即和原pdf文件标题一致，若不一致，则修改
+    if target_md_file.stem != stem:
+        target_md_file = target_md_file.rename(target_md_file.with_name(f"{stem}.md"))
+    return str(target_md_file.resolve())
 
 
 @node_log("node_pdf_to_md")
@@ -205,6 +249,14 @@ def node_pdf_to_md(state: ImportGraphState) -> ImportGraphState:
     zip_url = step_2_upload_and_poll(pdf_path_obj, local_dir_obj)
     #步骤3：下载和解压
     final_md_path = step_3_download_and_extract(zip_url,local_dir_obj,pdf_path_obj.stem)
+    #更新状态中的md_path
+    state["md_content"] = final_md_path
+    #将md的内容保存在状态中的md_content中
+    with open(final_md_path, "r",encoding="utf-8") as f:
+        state["md_content"] = f.read()
+    #第二种读取方法
+    # final_md_path_obj = Path(final_md_path)
+    # state["md_content"] = final_md_path_obj.read_text(encoding="utf-8")
 
     # 记录当前节点状态为已完成
     add_done_task(state["task_id"],"node_pdf_to_md")
