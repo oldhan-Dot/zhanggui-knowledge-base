@@ -1,11 +1,19 @@
+import base64
 import re
 import sys
+from collections import deque
 from pathlib import Path
 
-from datasets.packaged_modules.webdataset.webdataset import IMAGE_EXTENSIONS
-
+from langchain_core.output_parsers import StrOutputParser
+from minio.deleteobjects import DeleteObject
+from app.clients.minio_utils import get_minio_client
+from app.conf.lm_config import lm_config
+from app.conf.minio_config import minio_config
+from app.core.load_prompt import load_prompt
 from app.core.logger import logger, node_log, step_log
 from app.import_process.agent.state import ImportGraphState
+from app.lm.lm_utils import get_llm_client
+from app.utils.rate_limit_utils import apply_api_rate_limit
 from app.utils.task_utils import add_running_task, add_done_task
 
 #MinIO支持的图片格式集合(小写后缀，统一匹配标准)
@@ -74,7 +82,105 @@ def step_2_scan_images(md_content:str, images_dir_obj:Path):
         image_targets.append((image_name,str(image_file),context))
     return image_targets
 
+@step_log("step_3_image_summary")
+#通过自定义生成用户提示词加上图片的内容生成的摘要
+def step_3_image_summary(image_targets , stem):
+    #创建存储最终结果的字典
+    summaries = {}
+    #创建一个双端队列
+    requests_limiter = deque()
+    #遍历image_targets,获取md文件中每个图片的摘要信息
+    for image_name,image_path,context in image_targets:
+        #实现限流
+        apply_api_rate_limit(requests_limiter,max_requests = 100)
+        #获取提示词
+         #自定义load_prompt函数加载提示词
+        prompt = load_prompt("image_summary",root_folder=stem,image_content=context)
+        #获取视觉模型
+         #使用自定义get_llm_client函数传参调用定义好的模型
+        vl_model = get_llm_client(lm_config.lv.model)
+        #判断image_path是否是字符串
+        if isinstance(image_path, str):
+            image_path = Path(image_path)
+        #将图片文件中内容转换为base64格式的字符串
+            #image_path.read_bytes()：将图片转换为字节再转换为字符串
+        image_base64 = base64.b64encode(image_path.read_bytes()).decode(encoding="utf-8")
+        #准备用户提示词,以下是访问视觉模型解析图片的提示词的固定结构
+        message = [
+            {
+                "type": "image_url",
+                "image_url":f"data:image/jpeg;base64,{image_base64}",
+            },
+            {
+                "type": "text",
+                "text":prompt
+            }
+        ]
+        #创建链对象
+        chain = vl_model | StrOutputParser
+        #调用视觉模型
+        summary = chain.invoke([message])
+        #存储图片和所对应的摘要信息
+        summaries[image_name]=summary
+    return summaries
 
+@step_log("step_4_upload_images_replace")
+def step_4_upload_images_replace(image_summaries, image_targets, md_content, stem):
+    #获取miniO对象
+    minio_client = get_minio_client()
+    #将之前md文件中的图片查询
+    object_list = minio_client.list_objects(
+        bucket_name=minio_config.bucket_name,  # 设置桶名
+        prefix=f"{minio_config.minio_img_dir[1:]}/{stem}",#设置获取的图片前缀(即所在目录)
+        recursive = True #是否递归获取所有子目录下的文件
+    )
+    #将object_list中的图片对象转换为DeleteObject对象
+    delete_object_list = [DeleteObject(obj.object_name) for obj in object_list]
+    #将object_list中的图片删除
+    delete_errors = minio_client.remove_objects(
+        bucket_name=minio_config.bucket_name,
+        delete_object_list=delete_object_list,
+    )
+    # 遍历删除的结果
+    for error in delete_errors:
+        logger.warning(f"图片删除失败,{error}")
+    #创建存储图片上传到minio之后的url字典
+    image_urls = {}
+    #遍历image_targets将图片上传到minio
+    for image_name,image_path,_ in image_targets:
+        try:
+            minio_client.fput_object(
+                bucket_name=minio_config.bucket_name,
+                #object_name 就是"对象在桶内的路径"
+                object_name=f"{minio_config.minio_img_dir}/{stem}/{image_name}",
+                file_path=image_path,
+                content_type="image/jpeg",
+            )
+            #获取图片在minio中的地址
+            image_urls[image_name]=f"http://{minio_config.endpoint}/{minio_config.bucket_name}/{minio_config.minio_img_dir}/{stem}/{image_name}"
+        except Exception as e:
+            logger.warning(f"{image_name}上传失败,{e}")
+    #创建存储图片所对应的摘要信息和minio中url的变量
+    image_infos = {}
+    #遍历image_summaries
+    for image_name,summary in image_summaries.items():
+        image_infos[image_name]=(summary,image_urls[image_name])
+    #遍历image_infos将md_content中的![]()-->![summary](url)
+    for image_name,(summary,url) in image_infos.items():
+        #创建正则表达式，匹配md_content中的图片 .*?是非贪婪(匹配到第一个就停) re.escape():会自动加反斜杠防止被转义
+        pattern = re.compile(r"!\[.*?\]\(.*?" + re.escape(image_name) + ".*?\)")
+        # 替换md_content中的![]()-->![summary](url)
+          #lambda:第1处匹配 ![a](1.png)  → 调用 lambda 一次 → 用返回值替换
+        md_content = pattern.sub(lambda _:f"![{summary}]({url})", md_content)
+    return md_content
+
+@step_log("step_5_backup_md_file")
+def step_5_backup_md_file(md_path_obj, new_md_content):
+    #创建新的md文件路径
+    new_md_path_obj = md_path_obj.parent /f"{md_path_obj.stem}_new{md_path_obj.suffix}"
+    #向new_md_path_obj所对应的文件中写入new_md_content
+    new_md_path_obj.write_text(new_md_content,encoding="utf-8")
+    return str(new_md_path_obj)
 
 
 @node_log("node_md_img")
@@ -94,6 +200,18 @@ def node_md_img(state: ImportGraphState) -> ImportGraphState:
     md_content,md_path_obj,image_dir_obj = step_1_get_content(state)
     #步骤2：提取md文件中的图片
     image_targets = step_2_scan_images(md_content,image_dir_obj)
+    #步骤3:进行图片内容总结和处理[调用多模态模型，总结图片内容，最终返回，图片名/总结]
+    image_summaries = step_3_image_summary(image_targets,md_path_obj.stem)
+    #步骤4：上传图片到MiniO中，替换图片的本地地址和描述！返回替换后的md_content内容
+      #返回回来的是把md文件中有图片地方上面引用的地址还有描述修改后的content内容
+        #![产品外观展示图，白色机身](http://47.94.86.115:9000/knowl）
+    new_md_content = step_4_upload_images_replace(image_summaries,image_targets,md_content,md_path_obj.stem)
+    #步骤5:备份新的md内容，改为原名称_new.md
+    new_md_file_path_str =  step_5_backup_md_file(md_path_obj,new_md_content)
+    # 更新状态
+    state["md_content"] = new_md_content
+    state["md_path"]=new_md_file_path_str
+
     #记录任务状态为已完成
     add_done_task(state["task_id"],"node_md_img")
     return state
