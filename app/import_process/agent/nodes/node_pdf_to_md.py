@@ -1,3 +1,4 @@
+import os
 import shutil
 import sys
 import time
@@ -7,7 +8,7 @@ import requests
 
 from app.conf.mineru_config import mineru_config
 from app.core.logger import logger, node_log, step_log, PROJECT_ROOT
-from app.import_process.agent.state import ImportGraphState
+from app.import_process.agent.state import ImportGraphState, create_default_state
 from app.utils.task_utils import add_running_task, add_done_task
 
 """
@@ -94,9 +95,9 @@ def step_2_upload_and_poll(pdf_path_obj, local_dir_obj):
     #获取此次请求的响应体
     result = response.json()
     #判断此次请求的接口调用状态
-    if result["code"] != 200:
-        logger.error(f"MinerU服务器接口调用失败，接口状态码：{result["code"]},接口处理信息：{result["msg"]}")
-        raise RuntimeError(f"MinerU服务器接口调用失败，接口状态码：{result["code"]},接口处理信息：{result["msg"]}")
+    if result["code"] != 0:
+        logger.error(f"MinerU服务器接口调用失败，接口状态码：{result['code']},接口处理信息：{result['msg']}")
+        raise RuntimeError(f"MinerU服务器接口调用失败，接口状态码：{result['code']},接口处理信息：{result['msg']}")
     #说明第一次请求成功，获取任务id和上传pdf的链接地址
     batch_id = result["data"]["batch_id"]
     file_upload_url = result["data"]["file_urls"][0]
@@ -112,7 +113,7 @@ def step_2_upload_and_poll(pdf_path_obj, local_dir_obj):
         if upload_response.status_code != 200:
             raise RuntimeError(f"pdf文件上传失败,状态码{upload_response.status_code}请重试")
     #发送第三次请求，通过batch_id来获取我们的解析结果，即pdf转换md之后的压缩文件地址
-    batch_url = f"{mineru_config.base_url}/file-urls/{batch_id}"
+    batch_url = f"{mineru_config.base_url}/extract-results/batch/{batch_id}"
     #最大超时时间10分钟
     timeout_seconds = 600
     #轮询间隔3秒
@@ -148,11 +149,11 @@ def step_2_upload_and_poll(pdf_path_obj, local_dir_obj):
         poll_result = poll_response.json()
         #判断接口状态码是否为0
         if poll_result["code"] != 0:
-            logger.warning(f"minerU接口端出现了问题，接口状态码:{poll_result["code"]},接口处理信息：{poll_result["msg"]}")
+            logger.warning(f"minerU接口端出现了问题，接口状态码:{poll_result['code']},接口处理信息：{poll_result['msg']}")
             time.sleep(poll_interval)
             continue
         #获取服务器响应的解析结果
-        extract_result = poll_result["data"]["extract_results"][0]
+        extract_result = poll_result["data"]["extract_result"][0]
         #判断extract_result是否为空
         if not extract_result:
             logger.warning(f"未获取到解析结果，请重试")
@@ -202,7 +203,7 @@ def step_3_download_and_extract(zip_url : str, local_dir_obj : Path, stem :str):
     #exist_ok = True表示目录存在也不会报错
     extract_target_dir.mkdir(parents=True, exist_ok=True)
     #解压缩文件
-    with zipfile.ZipFile(zip_url) as zip_file:
+    with zipfile.ZipFile(zip_save_path) as zip_file:
         zip_file.extractall(extract_target_dir)
     #获取extract_target_dir文件下的所有md文件
     md_file_list = list(extract_target_dir.rglob("*.md"))
@@ -261,3 +262,27 @@ def node_pdf_to_md(state: ImportGraphState) -> ImportGraphState:
     # 记录当前节点状态为已完成
     add_done_task(state["task_id"],"node_pdf_to_md")
     return state
+
+
+
+if __name__ == "__main__":
+
+    # 单元测试：验证PDF转MD全流程
+    logger.info("===== 开始node_pdf_to_md节点单元测试 =====")
+
+    from app.utils.path_util import PROJECT_ROOT
+    logger.info(f"测试获取根地址：{PROJECT_ROOT}")
+
+    test_pdf_name = os.path.join("doc", "hak180产品安全手册.pdf")
+    test_pdf_path = os.path.join(PROJECT_ROOT, test_pdf_name)
+
+    # 构造测试状态
+    test_state = create_default_state(
+        task_id="test_pdf2md_task_001",
+        pdf_path=test_pdf_path,
+        local_dir=os.path.join(PROJECT_ROOT, "output")
+    )
+
+    node_pdf_to_md(test_state)
+
+    logger.info("===== 结束node_pdf_to_md节点单元测试 =====")
