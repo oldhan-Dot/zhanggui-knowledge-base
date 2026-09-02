@@ -217,6 +217,7 @@ def step_3_download_and_extract(zip_url : str, local_dir_obj : Path, stem :str):
         if md_file.stem ==stem:
             target_md_file = md_file
             break
+
     #若extract_target_dir中没有与原pdf文件标题一致的md文件，再找full.md
     if not target_md_file:
         for md_file in md_file_list:
