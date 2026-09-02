@@ -1,5 +1,9 @@
+import json
 import re
 import sys
+from pathlib import Path
+
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from app.core.logger import logger, node_log, step_log
 from app.import_process.agent.state import ImportGraphState
@@ -91,6 +95,62 @@ def step_2_split_by_title(md_content, file_title):
         )
     return sections
 
+@step_log("step_3_refine_chunks")
+def step_3_refine_chunks(sections):
+    """
+         同一标题下,同一语义,进行二次超长切割!!
+       :param sections: 按标题切割数据
+       :return: 二次切割数据
+       """
+    spliter = RecursiveCharacterTextSplitter(
+        chunk_size=CHUNCK_SIZE,
+        overlap=CHUNCK_OVERLAP,
+        # 切割优先级：段落 → 换行 → 句子 → 空格
+        seaparators = ["\n\n", "\n", "。", "！", "；", " "]
+    )
+    #进行切分
+    final_chunks = []
+    for chunk in sections:
+        #进行二次切分
+        sub_chunks = spliter.split_text(chunk["content"])
+        # 判断二次切分之后的子切片的数量是否大于1
+        has_multiple_chunks = len(sub_chunks) > 1
+        #对二次切分进行遍历
+        for idx,sub_chunk in enumerate(sub_chunks,start=1):
+            # 获取当前子切片的标题
+            # 若有多个子切片，current_title=title_l,title_2,title_3..
+            # 若只有一个子切片，current_title=title
+            current_title = f"{chunk['title']}_{idx}" if has_multiple_chunks else chunk["title"]
+            #保存每个切片
+            final_chunks.append(
+                {
+                    "title": current_title,
+                    "content": sub_chunk,
+                    "parent_title": chunk["title"],
+                    "file_title": chunk["file_title"],
+                    "part":idx
+                }
+            )
+    return final_chunks
+
+@step_log("step_4_backup_chunks")
+def step_4_backup_chunks(final_chunks, state):
+    """
+          进行最终数据备份
+        :param final_chunks: 要备份的数据
+        :param state: 获取local_dir文件夹
+        :return:
+        """
+    chunks_backup_path = Path(state["md_path"]).parent / "backup.json"
+    with open(chunks_backup_path, "w", encoding="utf-8") as f:
+        json.dump(
+                  final_chunks,
+                  f,
+                  ensure_ascii=False ,#中文直接原文存储
+                  indent=4, # json带有缩进 4
+                  )
+
+
 @node_log("node_document_split")
 def node_document_split(state: ImportGraphState) -> ImportGraphState:
     """
@@ -107,6 +167,11 @@ def node_document_split(state: ImportGraphState) -> ImportGraphState:
     md_content , file_title = step_1_get_content(state)
     #步骤2：通过标题初切，保证语义的完整
     sections = step_2_split_by_title(md_content,file_title)
+    #步骤3:使用RecursiveCharacterTextSpliter进行二次切分，控制切片的大小
+    final_chunks = step_3_refine_chunks(sections)
+    #步骤4:更新 State 并将结果备份到本地
+    state["chunks"] = final_chunks
+    step_4_backup_chunks(final_chunks, state)
 
     #记录节点已完成
     add_done_task(state["task_id"],"node_document_split")
