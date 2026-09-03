@@ -98,6 +98,7 @@ def step_4_insert_collections(milvus_client, chunks):
             chunk["chunk_id"] = ids[index]
     return chunks
 
+
 @node_log("node_import_milvus")
 def node_import_milvus(state: ImportGraphState) -> ImportGraphState:
     """
