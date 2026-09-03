@@ -1,9 +1,11 @@
 import base64
+import os
 import re
 import sys
 from collections import deque
 from pathlib import Path
 
+from langchain_core.messages import HumanMessage
 from langchain_core.output_parsers import StrOutputParser
 from minio.deleteobjects import DeleteObject
 from app.clients.minio_utils import get_minio_client
@@ -40,7 +42,7 @@ def step_1_get_content(state:ImportGraphState):
     #若为空说明当前流程中，上传的文件是md，节点的执行node_entry -> node_md_img
     #若不为空，说明当前流程中，是上传的pdf转换为md文件
     if not state["md_content"]:
-        state["md_content"] = md_path_obj.read_text("encoding=utf-8")
+        state["md_content"] = md_path_obj.read_text(encoding="utf-8")
     #获取存储md文件所对应的图片目录文件路径
     images_dir_obj = md_path_obj.parent / "images"
     return state["md_content"], md_path_obj, images_dir_obj
@@ -98,7 +100,7 @@ def step_3_image_summary(image_targets , stem):
         prompt = load_prompt("image_summary",root_folder=stem,image_content=context)
         #获取视觉模型
          #使用自定义get_llm_client函数传参调用定义好的模型
-        vl_model = get_llm_client(lm_config.lv.model)
+        vl_model = get_llm_client(lm_config.lv_model)
         #判断image_path是否是字符串
         if isinstance(image_path, str):
             image_path = Path(image_path)
@@ -106,18 +108,21 @@ def step_3_image_summary(image_targets , stem):
             #image_path.read_bytes()：将图片转换为字节再转换为字符串
         image_base64 = base64.b64encode(image_path.read_bytes()).decode(encoding="utf-8")
         #准备用户提示词,以下是访问视觉模型解析图片的提示词的固定结构
-        message = [
+        message = HumanMessage(
+            content=[
             {
                 "type": "image_url",
-                "image_url":f"data:image/jpeg;base64,{image_base64}",
+                "image_url":{
+                    "url":f"data:image/jpeg;base64,{image_base64}"
+                }
             },
             {
                 "type": "text",
                 "text":prompt
             }
-        ]
+        ])
         #创建链对象
-        chain = vl_model | StrOutputParser
+        chain = vl_model | StrOutputParser()
         #调用视觉模型
         summary = chain.invoke([message])
         #存储图片和所对应的摘要信息
@@ -215,3 +220,31 @@ def node_md_img(state: ImportGraphState) -> ImportGraphState:
     #记录任务状态为已完成
     add_done_task(state["task_id"],"node_md_img")
     return state
+
+
+
+
+if __name__ == "__main__":
+    """本地测试入口：单独运行该文件时，执行MD图片处理全流程测试"""
+    from app.utils.path_util import PROJECT_ROOT
+    logger.info(f"本地测试 - 项目根目录：{PROJECT_ROOT}")
+
+    # 测试MD文件路径（需手动将测试文件放入对应目录）
+    test_md_name = os.path.join(r"output\hak180产品安全手册", "hak180产品安全手册.md")
+    test_md_path = os.path.join(PROJECT_ROOT, test_md_name)
+
+    # 校验测试文件是否存在
+    if not os.path.exists(test_md_path):
+        logger.error(f"本地测试 - 测试文件不存在：{test_md_path}")
+        logger.info("请检查文件路径，或手动将测试MD文件放入项目根目录的output目录下")
+    else:
+        # 构造测试状态对象，模拟流程入参
+        test_state = {
+            "md_path": test_md_path,
+            "task_id": "test_task_123456",
+            "md_content": ""
+        }
+        logger.info("开始本地测试 - MD图片处理全流程")
+        # 执行核心处理流程
+        result_state = node_md_img(test_state)
+        logger.info(f"本地测试完成 - 处理结果状态：{result_state}")
