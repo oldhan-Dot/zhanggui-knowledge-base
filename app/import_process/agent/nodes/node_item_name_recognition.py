@@ -101,7 +101,7 @@ def step_6_save_to_vector_db(file_title, item_name, dense_vector, sparse_vector)
     #获取milvus客户端对象
     milvus_client = get_milvus_client()
     #若milvus中不存在kb_item_names集合，则创建
-    if not milvus_client.has_collection(milvus_config.item_name_collection):
+    if not milvus_client.has_collection(collection_name= milvus_config.item_name_collection):
         #设置集合结构
         schema = milvus_client.create_schema(
             auto_id = True ,#集合中的主键自增
@@ -182,4 +182,41 @@ def node_item_name_recognition(state: ImportGraphState) -> ImportGraphState:
 
     return state
 
+#测试代码
+if __name__ == "__main__":
+    logger.info("=== 开始执行商品名称识别节点本地测试 ===")
+    try:
+        # 1. 构造模拟的ImportGraphState状态（模拟上游节点产出数据）
+        mock_state = ImportGraphState({
+            "task_id": "test_task_123456",  # 测试任务ID
+            "file_title": "华为Mate60 Pro手机使用说明书",  # 模拟文件标题
+            "file_name": "华为Mate60Pro说明书.pdf",  # 模拟原始文件名（兜底用）
+            # 模拟文本切片列表（上游切片节点产出，含title/content字段）
+            "chunks": [
+                {
+                    "title": "产品简介",
+                    "content": "华为Mate60 Pro是华为公司2023年发布的旗舰智能手机，搭载麒麟9000S芯片，支持卫星通话功能，屏幕尺寸6.82英寸，分辨率2700×1224。"
+                },
+                {
+                    "title": "拍照功能",
+                    "content": "华为Mate60 Pro后置5000万像素超光变摄像头+1200万像素超广角摄像头+4800万像素长焦摄像头，支持5倍光学变焦，100倍数字变焦。"
+                },
+                {
+                    "title": "电池参数",
+                    "content": "电池容量5000mAh，支持88W有线超级快充，50W无线超级快充，反向无线充电功能。"
+                }
+            ]
+        })
 
+        # 2. 调用商品名称识别核心节点
+        result_state = node_item_name_recognition(mock_state)
+
+        # 3. 打印测试结果（调试用）
+        logger.info("=== 商品名称识别节点本地测试完成 ===")
+        logger.info(f"测试任务ID：{result_state.get('task_id')}")
+        logger.info(f"最终识别商品名称：{result_state.get('item_name')}")
+        logger.info(f"切片数量：{len(result_state.get('chunks', []))}")
+        logger.info(f"第一个切片商品名称：{result_state.get('chunks', [{}])[0].get('item_name')}")
+
+    except Exception as e:
+        logger.error(f"商品名称识别节点本地测试失败，原因：{str(e)}", exc_info=True)

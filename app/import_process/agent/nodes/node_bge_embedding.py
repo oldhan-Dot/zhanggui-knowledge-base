@@ -64,10 +64,6 @@ def step_3_generate_embeddings(texts_to_embed, bge_m3_ef)-> List[Dict[str, Any]]
     return output_data
 
 
-
-
-
-
 @node_log("node_bge_embedding")
 def node_bge_embedding(state: ImportGraphState) -> ImportGraphState:
     """

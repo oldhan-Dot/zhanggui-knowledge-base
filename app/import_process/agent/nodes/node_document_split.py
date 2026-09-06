@@ -105,9 +105,9 @@ def step_3_refine_chunks(sections):
        """
     spliter = RecursiveCharacterTextSplitter(
         chunk_size=CHUNCK_SIZE,
-        overlap=CHUNCK_OVERLAP,
+        chunk_overlap=CHUNCK_OVERLAP,
         # 切割优先级：段落 → 换行 → 句子 → 空格
-        seaparators = ["\n\n", "\n", "。", "！", "；", " "]
+        separators = ["\n\n", "\n", "。", "！", "；", " "]
     )
     #进行切分
     final_chunks = []

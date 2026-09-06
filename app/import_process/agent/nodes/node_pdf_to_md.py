@@ -190,7 +190,7 @@ def step_3_download_and_extract(zip_url : str, local_dir_obj : Path, stem :str):
     if response.status_code != 200:
         raise ValueError(f"下载压缩文件失败，状态码：{response.status_code}")
     # 设置保存压缩文件路径，并保存压缩文件
-    zip_save_path = local_dir_obj / f"{stem}.zip"
+    zip_save_path = local_dir_obj / f"{stem}_result.zip"
     zip_save_path.write_bytes(response.content)
     #设置保存压缩文件后的解压文件的路径
     extract_target_dir = local_dir_obj / stem
@@ -203,7 +203,7 @@ def step_3_download_and_extract(zip_url : str, local_dir_obj : Path, stem :str):
     #exist_ok = True表示目录存在也不会报错
     extract_target_dir.mkdir(parents=True, exist_ok=True)
     #解压缩文件
-    with zipfile.ZipFile(zip_save_path) as zip_file:
+    with zipfile.ZipFile(zip_save_path,"r") as zip_file:
         zip_file.extractall(extract_target_dir)
     #获取extract_target_dir文件下的所有md文件
     md_file_list = list(extract_target_dir.rglob("*.md"))
@@ -214,7 +214,7 @@ def step_3_download_and_extract(zip_url : str, local_dir_obj : Path, stem :str):
     target_md_file = None
     #先获取extract_target_dir中与原pdf文件标题一致的md文件
     for md_file in md_file_list:
-        if md_file.stem ==stem:
+        if md_file.stem == stem:
             target_md_file = md_file
             break
 
