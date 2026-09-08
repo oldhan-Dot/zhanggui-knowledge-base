@@ -110,6 +110,7 @@ async def stream(session_id: str,request:Request):
 def health():
     return {"ok":True}
 
+
 #查询最近的10条历史对话
 @app.get("/history/{session_id}")
 async def history(session_id : str,limit:int=10):
