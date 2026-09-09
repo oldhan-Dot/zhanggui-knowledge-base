@@ -665,7 +665,6 @@ BGE-M3 稀疏向量是 CSR 矩阵，索引是 `numpy.int64`，直接做字典 ke
 
 ## 致谢
 
-- 课程与项目设计：尚硅谷
 - [LangChain / LangGraph](https://github.com/langchain-ai/langgraph)
 - [Milvus](https://github.com/milvus-io/milvus)
 - [FlagEmbedding / BGE-M3](https://github.com/FlagOpen/FlagEmbedding)
