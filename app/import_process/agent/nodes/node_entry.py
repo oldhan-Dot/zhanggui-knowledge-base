@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from app.core.logger import node_log, logger
 from app.import_process.agent.state import ImportGraphState, create_default_state
 from app.utils.task_utils import add_running_task, add_done_task
@@ -38,7 +40,7 @@ def node_entry(state:ImportGraphState)->ImportGraphState:
         logger.warning(f"当前上传文件路径{local_file_path},文件格式不是系统支持的格式")
         #记录该节点已完成
         add_done_task(state["task_id"], "node_entry")
-    return state
+        return state
     #获取文件的标题file_title（文件名去掉后缀的结果）
     file_title = Path(local_file_path).stem
     #更新file_title

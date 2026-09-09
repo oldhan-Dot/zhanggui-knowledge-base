@@ -45,7 +45,7 @@ def get_llm_client(model: Optional[str] = None, json_mode: bool = False) -> Chat
 
     # 4. 配置参数组装：区分「国产模型私有参数」和「OpenAI通用参数」
     # extra_body：千问/即梦等国产模型专属私有参数（LangChain透传至API）
-    extra_body = {"enable_thinking": False}  # 千问专属：关闭思考链输出，减少冗余内容
+    extra_body = {"enable_thinking": False}  # 千问专属：关闭思考链输出，减少冗余内容 extra_body = {"enable_thinking": False}
     # model_kwargs：OpenAI通用参数，所有兼容API均支持
     model_kwargs = {}
     if json_mode:

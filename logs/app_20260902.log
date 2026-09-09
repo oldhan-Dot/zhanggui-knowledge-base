@@ -1,0 +1,1183 @@
+2026-09-02 09:57:32.787 | INFO     | node_pdf_to_md.py   :<module>       :271  - ===== 开始node_pdf_to_md节点单元测试 =====
+2026-09-02 09:57:32.980 | INFO     | node_pdf_to_md.py   :<module>       :274  - 测试获取根地址：D:\TeacheSGG\workspace\knowledge_base
+2026-09-02 09:57:32.982 | INFO     | node_pdf_to_md.py   :<module>       :286  - [node_pdf_to_md] 节点开始，追踪ID=test_pdf2md_task_001
+2026-09-02 09:57:32.983 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :248  - [step_1_validate_paths] 步骤开始
+2026-09-02 09:57:32.985 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :248  - [step_1_validate_paths] 步骤完成，耗时=1ms
+2026-09-02 09:57:32.987 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :250  - [step_2_upload_and_poll] 步骤开始
+2026-09-02 09:57:33.278 | ERROR    | node_pdf_to_md.py   :step_2_upload_and_poll:99   - MinerU服务器接口调用失败，接口状态码：0,接口处理信息：ok
+2026-09-02 09:57:33.280 | ERROR    | node_pdf_to_md.py   :node_pdf_to_md :250  - [step_2_upload_and_poll] 步骤异常
+Traceback (most recent call last):
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 286, in <module>
+    node_pdf_to_md(test_state)
+    │              └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+    └ <function node_pdf_to_md at 0x000002073EA26DE0>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 123, in wrapper
+    result = func(state, *args, **kwargs)
+             │    │       │       └ {}
+             │    │       └ ()
+             │    └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+             └ <function node_pdf_to_md at 0x000002073EA26D40>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 250, in node_pdf_to_md
+    zip_url = step_2_upload_and_poll(pdf_path_obj, local_dir_obj)
+              │                      │             └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/output')
+              │                      └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/doc/hak180产品安全手册.pdf')
+              └ <function step_2_upload_and_poll at 0x000002073EA26B60>
+
+> File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 145, in wrapper
+    result = func(*args, **kwargs)
+             │     │       └ {}
+             │     └ (WindowsPath('D:/TeacheSGG/workspace/knowledge_base/doc/hak180产品安全手册.pdf'), WindowsPath('D:/TeacheSGG/workspace/knowledge_bas...
+             └ <function step_2_upload_and_poll at 0x000002073EA26AC0>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 100, in step_2_upload_and_poll
+    raise RuntimeError(f"MinerU服务器接口调用失败，接口状态码：{result['code']},接口处理信息：{result['msg']}")
+
+RuntimeError: MinerU服务器接口调用失败，接口状态码：0,接口处理信息：ok
+2026-09-02 09:57:33.283 | ERROR    | node_pdf_to_md.py   :<module>       :286  - [node_pdf_to_md] 节点异常，追踪ID=test_pdf2md_task_001
+Traceback (most recent call last):
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 286, in <module>
+    node_pdf_to_md(test_state)
+    │              └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+    └ <function node_pdf_to_md at 0x000002073EA26DE0>
+
+> File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 123, in wrapper
+    result = func(state, *args, **kwargs)
+             │    │       │       └ {}
+             │    │       └ ()
+             │    └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+             └ <function node_pdf_to_md at 0x000002073EA26D40>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 250, in node_pdf_to_md
+    zip_url = step_2_upload_and_poll(pdf_path_obj, local_dir_obj)
+              │                      │             └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/output')
+              │                      └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/doc/hak180产品安全手册.pdf')
+              └ <function step_2_upload_and_poll at 0x000002073EA26B60>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 145, in wrapper
+    result = func(*args, **kwargs)
+             │     │       └ {}
+             │     └ (WindowsPath('D:/TeacheSGG/workspace/knowledge_base/doc/hak180产品安全手册.pdf'), WindowsPath('D:/TeacheSGG/workspace/knowledge_bas...
+             └ <function step_2_upload_and_poll at 0x000002073EA26AC0>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 100, in step_2_upload_and_poll
+    raise RuntimeError(f"MinerU服务器接口调用失败，接口状态码：{result['code']},接口处理信息：{result['msg']}")
+
+RuntimeError: MinerU服务器接口调用失败，接口状态码：0,接口处理信息：ok
+2026-09-02 10:00:05.051 | INFO     | node_pdf_to_md.py   :<module>       :271  - ===== 开始node_pdf_to_md节点单元测试 =====
+2026-09-02 10:00:05.239 | INFO     | node_pdf_to_md.py   :<module>       :274  - 测试获取根地址：D:\TeacheSGG\workspace\knowledge_base
+2026-09-02 10:00:05.240 | INFO     | node_pdf_to_md.py   :<module>       :286  - [node_pdf_to_md] 节点开始，追踪ID=test_pdf2md_task_001
+2026-09-02 10:00:05.241 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :248  - [step_1_validate_paths] 步骤开始
+2026-09-02 10:00:05.244 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :248  - [step_1_validate_paths] 步骤完成，耗时=2ms
+2026-09-02 10:00:05.245 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :250  - [step_2_upload_and_poll] 步骤开始
+2026-09-02 10:00:07.337 | ERROR    | node_pdf_to_md.py   :node_pdf_to_md :250  - [step_2_upload_and_poll] 步骤异常
+Traceback (most recent call last):
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 286, in <module>
+    node_pdf_to_md(test_state)
+    │              └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+    └ <function node_pdf_to_md at 0x0000027C9FCFCA40>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 123, in wrapper
+    result = func(state, *args, **kwargs)
+             │    │       │       └ {}
+             │    │       └ ()
+             │    └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+             └ <function node_pdf_to_md at 0x0000027C9FCFC9A0>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 250, in node_pdf_to_md
+    zip_url = step_2_upload_and_poll(pdf_path_obj, local_dir_obj)
+              │                      │             └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/output')
+              │                      └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/doc/hak180产品安全手册.pdf')
+              └ <function step_2_upload_and_poll at 0x0000027C9FCFC7C0>
+
+> File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 145, in wrapper
+    result = func(*args, **kwargs)
+             │     │       └ {}
+             │     └ (WindowsPath('D:/TeacheSGG/workspace/knowledge_base/doc/hak180产品安全手册.pdf'), WindowsPath('D:/TeacheSGG/workspace/knowledge_bas...
+             └ <function step_2_upload_and_poll at 0x0000027C9FCFC720>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 147, in step_2_upload_and_poll
+    raise RuntimeError(f"访问minerU服务器端出现问题，状态码:{status_code}")
+
+RuntimeError: 访问minerU服务器端出现问题，状态码:404
+2026-09-02 10:00:07.340 | ERROR    | node_pdf_to_md.py   :<module>       :286  - [node_pdf_to_md] 节点异常，追踪ID=test_pdf2md_task_001
+Traceback (most recent call last):
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 286, in <module>
+    node_pdf_to_md(test_state)
+    │              └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+    └ <function node_pdf_to_md at 0x0000027C9FCFCA40>
+
+> File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 123, in wrapper
+    result = func(state, *args, **kwargs)
+             │    │       │       └ {}
+             │    │       └ ()
+             │    └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+             └ <function node_pdf_to_md at 0x0000027C9FCFC9A0>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 250, in node_pdf_to_md
+    zip_url = step_2_upload_and_poll(pdf_path_obj, local_dir_obj)
+              │                      │             └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/output')
+              │                      └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/doc/hak180产品安全手册.pdf')
+              └ <function step_2_upload_and_poll at 0x0000027C9FCFC7C0>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 145, in wrapper
+    result = func(*args, **kwargs)
+             │     │       └ {}
+             │     └ (WindowsPath('D:/TeacheSGG/workspace/knowledge_base/doc/hak180产品安全手册.pdf'), WindowsPath('D:/TeacheSGG/workspace/knowledge_bas...
+             └ <function step_2_upload_and_poll at 0x0000027C9FCFC720>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 147, in step_2_upload_and_poll
+    raise RuntimeError(f"访问minerU服务器端出现问题，状态码:{status_code}")
+
+RuntimeError: 访问minerU服务器端出现问题，状态码:404
+2026-09-02 10:00:55.238 | INFO     | node_pdf_to_md.py   :<module>       :271  - ===== 开始node_pdf_to_md节点单元测试 =====
+2026-09-02 10:00:55.420 | INFO     | node_pdf_to_md.py   :<module>       :274  - 测试获取根地址：D:\TeacheSGG\workspace\knowledge_base
+2026-09-02 10:00:55.421 | INFO     | node_pdf_to_md.py   :<module>       :286  - [node_pdf_to_md] 节点开始，追踪ID=test_pdf2md_task_001
+2026-09-02 10:00:55.422 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :248  - [step_1_validate_paths] 步骤开始
+2026-09-02 10:00:55.424 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :248  - [step_1_validate_paths] 步骤完成，耗时=2ms
+2026-09-02 10:00:55.425 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :250  - [step_2_upload_and_poll] 步骤开始
+2026-09-02 10:00:57.495 | ERROR    | node_pdf_to_md.py   :node_pdf_to_md :250  - [step_2_upload_and_poll] 步骤异常
+Traceback (most recent call last):
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 286, in <module>
+    node_pdf_to_md(test_state)
+    │              └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+    └ <function node_pdf_to_md at 0x000001FCA12ECA40>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 123, in wrapper
+    result = func(state, *args, **kwargs)
+             │    │       │       └ {}
+             │    │       └ ()
+             │    └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+             └ <function node_pdf_to_md at 0x000001FCA12EC9A0>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 250, in node_pdf_to_md
+    zip_url = step_2_upload_and_poll(pdf_path_obj, local_dir_obj)
+              │                      │             └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/output')
+              │                      └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/doc/hak180产品安全手册.pdf')
+              └ <function step_2_upload_and_poll at 0x000001FCA12EC7C0>
+
+> File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 145, in wrapper
+    result = func(*args, **kwargs)
+             │     │       └ {}
+             │     └ (WindowsPath('D:/TeacheSGG/workspace/knowledge_base/doc/hak180产品安全手册.pdf'), WindowsPath('D:/TeacheSGG/workspace/knowledge_bas...
+             └ <function step_2_upload_and_poll at 0x000001FCA12EC720>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 147, in step_2_upload_and_poll
+    raise RuntimeError(f"访问minerU服务器端出现问题，状态码:{status_code}")
+
+RuntimeError: 访问minerU服务器端出现问题，状态码:404
+2026-09-02 10:00:57.500 | ERROR    | node_pdf_to_md.py   :<module>       :286  - [node_pdf_to_md] 节点异常，追踪ID=test_pdf2md_task_001
+Traceback (most recent call last):
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 286, in <module>
+    node_pdf_to_md(test_state)
+    │              └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+    └ <function node_pdf_to_md at 0x000001FCA12ECA40>
+
+> File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 123, in wrapper
+    result = func(state, *args, **kwargs)
+             │    │       │       └ {}
+             │    │       └ ()
+             │    └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+             └ <function node_pdf_to_md at 0x000001FCA12EC9A0>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 250, in node_pdf_to_md
+    zip_url = step_2_upload_and_poll(pdf_path_obj, local_dir_obj)
+              │                      │             └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/output')
+              │                      └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/doc/hak180产品安全手册.pdf')
+              └ <function step_2_upload_and_poll at 0x000001FCA12EC7C0>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 145, in wrapper
+    result = func(*args, **kwargs)
+             │     │       └ {}
+             │     └ (WindowsPath('D:/TeacheSGG/workspace/knowledge_base/doc/hak180产品安全手册.pdf'), WindowsPath('D:/TeacheSGG/workspace/knowledge_bas...
+             └ <function step_2_upload_and_poll at 0x000001FCA12EC720>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 147, in step_2_upload_and_poll
+    raise RuntimeError(f"访问minerU服务器端出现问题，状态码:{status_code}")
+
+RuntimeError: 访问minerU服务器端出现问题，状态码:404
+2026-09-02 10:03:40.697 | INFO     | node_pdf_to_md.py   :<module>       :271  - ===== 开始node_pdf_to_md节点单元测试 =====
+2026-09-02 10:03:40.874 | INFO     | node_pdf_to_md.py   :<module>       :274  - 测试获取根地址：D:\TeacheSGG\workspace\knowledge_base
+2026-09-02 10:03:40.875 | INFO     | node_pdf_to_md.py   :<module>       :286  - [node_pdf_to_md] 节点开始，追踪ID=test_pdf2md_task_001
+2026-09-02 10:03:40.876 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :248  - [step_1_validate_paths] 步骤开始
+2026-09-02 10:03:40.878 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :248  - [step_1_validate_paths] 步骤完成，耗时=2ms
+2026-09-02 10:03:40.879 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :250  - [step_2_upload_and_poll] 步骤开始
+2026-09-02 10:03:42.979 | ERROR    | node_pdf_to_md.py   :node_pdf_to_md :250  - [step_2_upload_and_poll] 步骤异常
+Traceback (most recent call last):
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 286, in <module>
+    node_pdf_to_md(test_state)
+    │              └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+    └ <function node_pdf_to_md at 0x000002CD4E68CA40>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 123, in wrapper
+    result = func(state, *args, **kwargs)
+             │    │       │       └ {}
+             │    │       └ ()
+             │    └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+             └ <function node_pdf_to_md at 0x000002CD4E68C9A0>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 250, in node_pdf_to_md
+    zip_url = step_2_upload_and_poll(pdf_path_obj, local_dir_obj)
+              │                      │             └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/output')
+              │                      └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/doc/hak180产品安全手册.pdf')
+              └ <function step_2_upload_and_poll at 0x000002CD4E68C7C0>
+
+> File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 145, in wrapper
+    result = func(*args, **kwargs)
+             │     │       └ {}
+             │     └ (WindowsPath('D:/TeacheSGG/workspace/knowledge_base/doc/hak180产品安全手册.pdf'), WindowsPath('D:/TeacheSGG/workspace/knowledge_bas...
+             └ <function step_2_upload_and_poll at 0x000002CD4E68C720>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 156, in step_2_upload_and_poll
+    extract_result = poll_result["data"]["extract_results"][0]
+                     └ {'code': 0, 'msg': 'ok', 'trace_id': '5337e69a021bcb160e8ac6d8ada47535', 'data': {'batch_id': '0d93c264-3dbf-4ef6-9d3a-430c49...
+
+KeyError: 'extract_results'
+2026-09-02 10:03:42.982 | ERROR    | node_pdf_to_md.py   :<module>       :286  - [node_pdf_to_md] 节点异常，追踪ID=test_pdf2md_task_001
+Traceback (most recent call last):
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 286, in <module>
+    node_pdf_to_md(test_state)
+    │              └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+    └ <function node_pdf_to_md at 0x000002CD4E68CA40>
+
+> File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 123, in wrapper
+    result = func(state, *args, **kwargs)
+             │    │       │       └ {}
+             │    │       └ ()
+             │    └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+             └ <function node_pdf_to_md at 0x000002CD4E68C9A0>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 250, in node_pdf_to_md
+    zip_url = step_2_upload_and_poll(pdf_path_obj, local_dir_obj)
+              │                      │             └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/output')
+              │                      └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/doc/hak180产品安全手册.pdf')
+              └ <function step_2_upload_and_poll at 0x000002CD4E68C7C0>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 145, in wrapper
+    result = func(*args, **kwargs)
+             │     │       └ {}
+             │     └ (WindowsPath('D:/TeacheSGG/workspace/knowledge_base/doc/hak180产品安全手册.pdf'), WindowsPath('D:/TeacheSGG/workspace/knowledge_bas...
+             └ <function step_2_upload_and_poll at 0x000002CD4E68C720>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 156, in step_2_upload_and_poll
+    extract_result = poll_result["data"]["extract_results"][0]
+                     └ {'code': 0, 'msg': 'ok', 'trace_id': '5337e69a021bcb160e8ac6d8ada47535', 'data': {'batch_id': '0d93c264-3dbf-4ef6-9d3a-430c49...
+
+KeyError: 'extract_results'
+2026-09-02 10:05:09.276 | INFO     | node_pdf_to_md.py   :<module>       :271  - ===== 开始node_pdf_to_md节点单元测试 =====
+2026-09-02 10:05:09.453 | INFO     | node_pdf_to_md.py   :<module>       :274  - 测试获取根地址：D:\TeacheSGG\workspace\knowledge_base
+2026-09-02 10:05:09.454 | INFO     | node_pdf_to_md.py   :<module>       :286  - [node_pdf_to_md] 节点开始，追踪ID=test_pdf2md_task_001
+2026-09-02 10:05:09.455 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :248  - [step_1_validate_paths] 步骤开始
+2026-09-02 10:05:09.457 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :248  - [step_1_validate_paths] 步骤完成，耗时=2ms
+2026-09-02 10:05:09.459 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :250  - [step_2_upload_and_poll] 步骤开始
+2026-09-02 10:05:15.026 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :250  - [step_2_upload_and_poll] 步骤完成，耗时=5566ms
+2026-09-02 10:05:15.028 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :252  - [step_3_upload_and_poll] 步骤开始
+2026-09-02 10:05:15.140 | ERROR    | node_pdf_to_md.py   :node_pdf_to_md :252  - [step_3_upload_and_poll] 步骤异常
+urllib3.exceptions.SSLError: [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)
+
+
+The above exception was the direct cause of the following exception:
+
+
+Traceback (most recent call last):
+
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\requests\adapters.py", line 644, in send
+    resp = conn.urlopen(
+           │    └ <function HTTPConnectionPool.urlopen at 0x00000260F3A174C0>
+           └ <urllib3.connectionpool.HTTPSConnectionPool object at 0x00000260F5773E10>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\urllib3\connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+              │       └ <function Retry.increment at 0x00000260F39282C0>
+              └ Retry(total=0, connect=None, read=False, redirect=None, status=None)
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\urllib3\util\retry.py", line 535, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+          │             │      │    │            └ SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)'))
+          │             │      │    └ SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)'))
+          │             │      └ '/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+          │             └ <urllib3.connectionpool.HTTPSConnectionPool object at 0x00000260F5773E10>
+          └ <class 'urllib3.exceptions.MaxRetryError'>
+
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='cdn-mineru.openxlab.org.cn', port=443): Max retries exceeded with url: /pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))
+
+
+During handling of the above exception, another exception occurred:
+
+
+Traceback (most recent call last):
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 286, in <module>
+    node_pdf_to_md(test_state)
+    │              └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+    └ <function node_pdf_to_md at 0x00000260F56ACA40>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 123, in wrapper
+    result = func(state, *args, **kwargs)
+             │    │       │       └ {}
+             │    │       └ ()
+             │    └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+             └ <function node_pdf_to_md at 0x00000260F56AC9A0>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 252, in node_pdf_to_md
+    final_md_path = step_3_download_and_extract(zip_url,local_dir_obj,pdf_path_obj.stem)
+                    │                           │       │             │            └ <property object at 0x00000260F1D80040>
+                    │                           │       │             └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/doc/hak180产品安全手册.pdf')
+                    │                           │       └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/output')
+                    │                           └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+                    └ <function step_3_download_and_extract at 0x00000260F56AC900>
+
+> File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 145, in wrapper
+    result = func(*args, **kwargs)
+             │     │       └ {}
+             │     └ ('https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip', WindowsPath('D:/TeacheSGG/work...
+             └ <function step_3_download_and_extract at 0x00000260F56AC860>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 188, in step_3_download_and_extract
+    response = requests.get(zip_url,timeout=120)
+               │        │   └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+               │        └ <function get at 0x00000260F3BFD760>
+               └ <module 'requests' from 'D:\\TeacheSGG\\workspace\\knowledge_base\\.venv\\Lib\\site-packages\\requests\\__init__.py'>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\requests\api.py", line 73, in get
+    return request("get", url, params=params, **kwargs)
+           │              │           │         └ {'timeout': 120}
+           │              │           └ None
+           │              └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+           └ <function request at 0x00000260F3BFF2E0>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           │       │              │           │      └ {'params': None, 'timeout': 120}
+           │       │              │           └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+           │       │              └ 'get'
+           │       └ <function Session.request at 0x00000260F3C339C0>
+           └ <requests.sessions.Session object at 0x00000260F546C990>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           │    │    │       └ {'timeout': 120, 'allow_redirects': True, 'proxies': OrderedDict([('http', 'http://127.0.0.1:7897'), ('https', 'http://127.0....
+           │    │    └ <PreparedRequest [GET]>
+           │    └ <function Session.send at 0x00000260F3C33EC0>
+           └ <requests.sessions.Session object at 0x00000260F546C990>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\requests\sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        │       │    │          └ {'timeout': 120, 'proxies': OrderedDict([('http', 'http://127.0.0.1:7897'), ('https', 'http://127.0.0.1:7897'), ('ftp', 'http...
+        │       │    └ <PreparedRequest [GET]>
+        │       └ <function HTTPAdapter.send at 0x00000260F3C33240>
+        └ <requests.adapters.HTTPAdapter object at 0x00000260F56ABD90>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\requests\adapters.py", line 675, in send
+    raise SSLError(e, request=request)
+          │                   └ <PreparedRequest [GET]>
+          └ <class 'requests.exceptions.SSLError'>
+
+requests.exceptions.SSLError: HTTPSConnectionPool(host='cdn-mineru.openxlab.org.cn', port=443): Max retries exceeded with url: /pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))
+2026-09-02 10:05:15.151 | ERROR    | node_pdf_to_md.py   :<module>       :286  - [node_pdf_to_md] 节点异常，追踪ID=test_pdf2md_task_001
+urllib3.exceptions.SSLError: [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)
+
+
+The above exception was the direct cause of the following exception:
+
+
+Traceback (most recent call last):
+
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\requests\adapters.py", line 644, in send
+    resp = conn.urlopen(
+           │    └ <function HTTPConnectionPool.urlopen at 0x00000260F3A174C0>
+           └ <urllib3.connectionpool.HTTPSConnectionPool object at 0x00000260F5773E10>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\urllib3\connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+              │       └ <function Retry.increment at 0x00000260F39282C0>
+              └ Retry(total=0, connect=None, read=False, redirect=None, status=None)
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\urllib3\util\retry.py", line 535, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+          │             │      │    │            └ SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)'))
+          │             │      │    └ SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)'))
+          │             │      └ '/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+          │             └ <urllib3.connectionpool.HTTPSConnectionPool object at 0x00000260F5773E10>
+          └ <class 'urllib3.exceptions.MaxRetryError'>
+
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='cdn-mineru.openxlab.org.cn', port=443): Max retries exceeded with url: /pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))
+
+
+During handling of the above exception, another exception occurred:
+
+
+Traceback (most recent call last):
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 286, in <module>
+    node_pdf_to_md(test_state)
+    │              └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+    └ <function node_pdf_to_md at 0x00000260F56ACA40>
+
+> File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 123, in wrapper
+    result = func(state, *args, **kwargs)
+             │    │       │       └ {}
+             │    │       └ ()
+             │    └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+             └ <function node_pdf_to_md at 0x00000260F56AC9A0>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 252, in node_pdf_to_md
+    final_md_path = step_3_download_and_extract(zip_url,local_dir_obj,pdf_path_obj.stem)
+                    │                           │       │             │            └ <property object at 0x00000260F1D80040>
+                    │                           │       │             └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/doc/hak180产品安全手册.pdf')
+                    │                           │       └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/output')
+                    │                           └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+                    └ <function step_3_download_and_extract at 0x00000260F56AC900>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 145, in wrapper
+    result = func(*args, **kwargs)
+             │     │       └ {}
+             │     └ ('https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip', WindowsPath('D:/TeacheSGG/work...
+             └ <function step_3_download_and_extract at 0x00000260F56AC860>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 188, in step_3_download_and_extract
+    response = requests.get(zip_url,timeout=120)
+               │        │   └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+               │        └ <function get at 0x00000260F3BFD760>
+               └ <module 'requests' from 'D:\\TeacheSGG\\workspace\\knowledge_base\\.venv\\Lib\\site-packages\\requests\\__init__.py'>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\requests\api.py", line 73, in get
+    return request("get", url, params=params, **kwargs)
+           │              │           │         └ {'timeout': 120}
+           │              │           └ None
+           │              └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+           └ <function request at 0x00000260F3BFF2E0>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           │       │              │           │      └ {'params': None, 'timeout': 120}
+           │       │              │           └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+           │       │              └ 'get'
+           │       └ <function Session.request at 0x00000260F3C339C0>
+           └ <requests.sessions.Session object at 0x00000260F546C990>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           │    │    │       └ {'timeout': 120, 'allow_redirects': True, 'proxies': OrderedDict([('http', 'http://127.0.0.1:7897'), ('https', 'http://127.0....
+           │    │    └ <PreparedRequest [GET]>
+           │    └ <function Session.send at 0x00000260F3C33EC0>
+           └ <requests.sessions.Session object at 0x00000260F546C990>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\requests\sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        │       │    │          └ {'timeout': 120, 'proxies': OrderedDict([('http', 'http://127.0.0.1:7897'), ('https', 'http://127.0.0.1:7897'), ('ftp', 'http...
+        │       │    └ <PreparedRequest [GET]>
+        │       └ <function HTTPAdapter.send at 0x00000260F3C33240>
+        └ <requests.adapters.HTTPAdapter object at 0x00000260F56ABD90>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\requests\adapters.py", line 675, in send
+    raise SSLError(e, request=request)
+          │                   └ <PreparedRequest [GET]>
+          └ <class 'requests.exceptions.SSLError'>
+
+requests.exceptions.SSLError: HTTPSConnectionPool(host='cdn-mineru.openxlab.org.cn', port=443): Max retries exceeded with url: /pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))
+2026-09-02 10:06:30.301 | INFO     | node_pdf_to_md.py   :<module>       :271  - ===== 开始node_pdf_to_md节点单元测试 =====
+2026-09-02 10:06:30.488 | INFO     | node_pdf_to_md.py   :<module>       :274  - 测试获取根地址：D:\TeacheSGG\workspace\knowledge_base
+2026-09-02 10:06:30.489 | INFO     | node_pdf_to_md.py   :<module>       :286  - [node_pdf_to_md] 节点开始，追踪ID=test_pdf2md_task_001
+2026-09-02 10:06:30.490 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :248  - [step_1_validate_paths] 步骤开始
+2026-09-02 10:06:30.492 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :248  - [step_1_validate_paths] 步骤完成，耗时=2ms
+2026-09-02 10:06:30.494 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :250  - [step_2_upload_and_poll] 步骤开始
+2026-09-02 10:06:36.391 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :250  - [step_2_upload_and_poll] 步骤完成，耗时=5896ms
+2026-09-02 10:06:36.393 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :252  - [step_3_upload_and_poll] 步骤开始
+2026-09-02 10:06:36.411 | ERROR    | node_pdf_to_md.py   :node_pdf_to_md :252  - [step_3_upload_and_poll] 步骤异常
+urllib3.exceptions.SSLError: [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)
+
+
+The above exception was the direct cause of the following exception:
+
+
+Traceback (most recent call last):
+
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\requests\adapters.py", line 644, in send
+    resp = conn.urlopen(
+           │    └ <function HTTPConnectionPool.urlopen at 0x000001C90D9674C0>
+           └ <urllib3.connectionpool.HTTPSConnectionPool object at 0x000001C90F683A50>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\urllib3\connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+              │       └ <function Retry.increment at 0x000001C90D8982C0>
+              └ Retry(total=0, connect=None, read=False, redirect=None, status=None)
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\urllib3\util\retry.py", line 535, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+          │             │      │    │            └ SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)'))
+          │             │      │    └ SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)'))
+          │             │      └ '/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+          │             └ <urllib3.connectionpool.HTTPSConnectionPool object at 0x000001C90F683A50>
+          └ <class 'urllib3.exceptions.MaxRetryError'>
+
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='cdn-mineru.openxlab.org.cn', port=443): Max retries exceeded with url: /pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))
+
+
+During handling of the above exception, another exception occurred:
+
+
+Traceback (most recent call last):
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 286, in <module>
+    node_pdf_to_md(test_state)
+    │              └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+    └ <function node_pdf_to_md at 0x000001C90F5BCA40>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 123, in wrapper
+    result = func(state, *args, **kwargs)
+             │    │       │       └ {}
+             │    │       └ ()
+             │    └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+             └ <function node_pdf_to_md at 0x000001C90F5BC9A0>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 252, in node_pdf_to_md
+    final_md_path = step_3_download_and_extract(zip_url,local_dir_obj,pdf_path_obj.stem)
+                    │                           │       │             │            └ <property object at 0x000001C90BD20270>
+                    │                           │       │             └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/doc/hak180产品安全手册.pdf')
+                    │                           │       └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/output')
+                    │                           └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+                    └ <function step_3_download_and_extract at 0x000001C90F5BC900>
+
+> File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 145, in wrapper
+    result = func(*args, **kwargs)
+             │     │       └ {}
+             │     └ ('https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip', WindowsPath('D:/TeacheSGG/work...
+             └ <function step_3_download_and_extract at 0x000001C90F5BC860>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 188, in step_3_download_and_extract
+    response = requests.get(zip_url,timeout=120)
+               │        │   └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+               │        └ <function get at 0x000001C90DB19760>
+               └ <module 'requests' from 'D:\\TeacheSGG\\workspace\\knowledge_base\\.venv\\Lib\\site-packages\\requests\\__init__.py'>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\requests\api.py", line 73, in get
+    return request("get", url, params=params, **kwargs)
+           │              │           │         └ {'timeout': 120}
+           │              │           └ None
+           │              └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+           └ <function request at 0x000001C90DB1B2E0>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           │       │              │           │      └ {'params': None, 'timeout': 120}
+           │       │              │           └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+           │       │              └ 'get'
+           │       └ <function Session.request at 0x000001C90DB539C0>
+           └ <requests.sessions.Session object at 0x000001C90DD250D0>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           │    │    │       └ {'timeout': 120, 'allow_redirects': True, 'proxies': OrderedDict([('http', 'http://127.0.0.1:7897'), ('https', 'http://127.0....
+           │    │    └ <PreparedRequest [GET]>
+           │    └ <function Session.send at 0x000001C90DB53EC0>
+           └ <requests.sessions.Session object at 0x000001C90DD250D0>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\requests\sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        │       │    │          └ {'timeout': 120, 'proxies': OrderedDict([('http', 'http://127.0.0.1:7897'), ('https', 'http://127.0.0.1:7897'), ('ftp', 'http...
+        │       │    └ <PreparedRequest [GET]>
+        │       └ <function HTTPAdapter.send at 0x000001C90DB53240>
+        └ <requests.adapters.HTTPAdapter object at 0x000001C90F680350>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\requests\adapters.py", line 675, in send
+    raise SSLError(e, request=request)
+          │                   └ <PreparedRequest [GET]>
+          └ <class 'requests.exceptions.SSLError'>
+
+requests.exceptions.SSLError: HTTPSConnectionPool(host='cdn-mineru.openxlab.org.cn', port=443): Max retries exceeded with url: /pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))
+2026-09-02 10:06:36.419 | ERROR    | node_pdf_to_md.py   :<module>       :286  - [node_pdf_to_md] 节点异常，追踪ID=test_pdf2md_task_001
+urllib3.exceptions.SSLError: [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)
+
+
+The above exception was the direct cause of the following exception:
+
+
+Traceback (most recent call last):
+
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\requests\adapters.py", line 644, in send
+    resp = conn.urlopen(
+           │    └ <function HTTPConnectionPool.urlopen at 0x000001C90D9674C0>
+           └ <urllib3.connectionpool.HTTPSConnectionPool object at 0x000001C90F683A50>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\urllib3\connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+              │       └ <function Retry.increment at 0x000001C90D8982C0>
+              └ Retry(total=0, connect=None, read=False, redirect=None, status=None)
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\urllib3\util\retry.py", line 535, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+          │             │      │    │            └ SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)'))
+          │             │      │    └ SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)'))
+          │             │      └ '/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+          │             └ <urllib3.connectionpool.HTTPSConnectionPool object at 0x000001C90F683A50>
+          └ <class 'urllib3.exceptions.MaxRetryError'>
+
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='cdn-mineru.openxlab.org.cn', port=443): Max retries exceeded with url: /pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))
+
+
+During handling of the above exception, another exception occurred:
+
+
+Traceback (most recent call last):
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 286, in <module>
+    node_pdf_to_md(test_state)
+    │              └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+    └ <function node_pdf_to_md at 0x000001C90F5BCA40>
+
+> File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 123, in wrapper
+    result = func(state, *args, **kwargs)
+             │    │       │       └ {}
+             │    │       └ ()
+             │    └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+             └ <function node_pdf_to_md at 0x000001C90F5BC9A0>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 252, in node_pdf_to_md
+    final_md_path = step_3_download_and_extract(zip_url,local_dir_obj,pdf_path_obj.stem)
+                    │                           │       │             │            └ <property object at 0x000001C90BD20270>
+                    │                           │       │             └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/doc/hak180产品安全手册.pdf')
+                    │                           │       └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/output')
+                    │                           └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+                    └ <function step_3_download_and_extract at 0x000001C90F5BC900>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 145, in wrapper
+    result = func(*args, **kwargs)
+             │     │       └ {}
+             │     └ ('https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip', WindowsPath('D:/TeacheSGG/work...
+             └ <function step_3_download_and_extract at 0x000001C90F5BC860>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 188, in step_3_download_and_extract
+    response = requests.get(zip_url,timeout=120)
+               │        │   └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+               │        └ <function get at 0x000001C90DB19760>
+               └ <module 'requests' from 'D:\\TeacheSGG\\workspace\\knowledge_base\\.venv\\Lib\\site-packages\\requests\\__init__.py'>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\requests\api.py", line 73, in get
+    return request("get", url, params=params, **kwargs)
+           │              │           │         └ {'timeout': 120}
+           │              │           └ None
+           │              └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+           └ <function request at 0x000001C90DB1B2E0>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           │       │              │           │      └ {'params': None, 'timeout': 120}
+           │       │              │           └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+           │       │              └ 'get'
+           │       └ <function Session.request at 0x000001C90DB539C0>
+           └ <requests.sessions.Session object at 0x000001C90DD250D0>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           │    │    │       └ {'timeout': 120, 'allow_redirects': True, 'proxies': OrderedDict([('http', 'http://127.0.0.1:7897'), ('https', 'http://127.0....
+           │    │    └ <PreparedRequest [GET]>
+           │    └ <function Session.send at 0x000001C90DB53EC0>
+           └ <requests.sessions.Session object at 0x000001C90DD250D0>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\requests\sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        │       │    │          └ {'timeout': 120, 'proxies': OrderedDict([('http', 'http://127.0.0.1:7897'), ('https', 'http://127.0.0.1:7897'), ('ftp', 'http...
+        │       │    └ <PreparedRequest [GET]>
+        │       └ <function HTTPAdapter.send at 0x000001C90DB53240>
+        └ <requests.adapters.HTTPAdapter object at 0x000001C90F680350>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\requests\adapters.py", line 675, in send
+    raise SSLError(e, request=request)
+          │                   └ <PreparedRequest [GET]>
+          └ <class 'requests.exceptions.SSLError'>
+
+requests.exceptions.SSLError: HTTPSConnectionPool(host='cdn-mineru.openxlab.org.cn', port=443): Max retries exceeded with url: /pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1016)')))
+2026-09-02 10:06:46.639 | INFO     | node_pdf_to_md.py   :<module>       :271  - ===== 开始node_pdf_to_md节点单元测试 =====
+2026-09-02 10:06:46.809 | INFO     | node_pdf_to_md.py   :<module>       :274  - 测试获取根地址：D:\TeacheSGG\workspace\knowledge_base
+2026-09-02 10:06:46.810 | INFO     | node_pdf_to_md.py   :<module>       :286  - [node_pdf_to_md] 节点开始，追踪ID=test_pdf2md_task_001
+2026-09-02 10:06:46.812 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :248  - [step_1_validate_paths] 步骤开始
+2026-09-02 10:06:46.814 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :248  - [step_1_validate_paths] 步骤完成，耗时=1ms
+2026-09-02 10:06:46.815 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :250  - [step_2_upload_and_poll] 步骤开始
+2026-09-02 10:06:52.122 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :250  - [step_2_upload_and_poll] 步骤完成，耗时=5306ms
+2026-09-02 10:06:52.124 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :252  - [step_3_upload_and_poll] 步骤开始
+2026-09-02 10:06:52.946 | ERROR    | node_pdf_to_md.py   :node_pdf_to_md :252  - [step_3_upload_and_poll] 步骤异常
+Traceback (most recent call last):
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 286, in <module>
+    node_pdf_to_md(test_state)
+    │              └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+    └ <function node_pdf_to_md at 0x000001DE4ECBCA40>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 123, in wrapper
+    result = func(state, *args, **kwargs)
+             │    │       │       └ {}
+             │    │       └ ()
+             │    └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+             └ <function node_pdf_to_md at 0x000001DE4ECBC9A0>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 252, in node_pdf_to_md
+    final_md_path = step_3_download_and_extract(zip_url,local_dir_obj,pdf_path_obj.stem)
+                    │                           │       │             │            └ <property object at 0x000001DE4B390040>
+                    │                           │       │             └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/doc/hak180产品安全手册.pdf')
+                    │                           │       └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/output')
+                    │                           └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+                    └ <function step_3_download_and_extract at 0x000001DE4ECBC900>
+
+> File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 145, in wrapper
+    result = func(*args, **kwargs)
+             │     │       └ {}
+             │     └ ('https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip', WindowsPath('D:/TeacheSGG/work...
+             └ <function step_3_download_and_extract at 0x000001DE4ECBC860>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 206, in step_3_download_and_extract
+    with zipfile.ZipFile(zip_url) as zip_file:
+         │       │       └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+         │       └ <class 'zipfile.ZipFile'>
+         └ <module 'zipfile' from 'C:\\Users\\20697\\AppData\\Roaming\\uv\\python\\cpython-3.11-windows-x86_64-none\\Lib\\zipfile.py'>
+
+  File "C:\Users\20697\AppData\Roaming\uv\python\cpython-3.11-windows-x86_64-none\Lib\zipfile.py", line 1312, in __init__
+    self.fp = io.open(file, filemode)
+    │    │    │  │    │     └ 'rb'
+    │    │    │  │    └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+    │    │    │  └ <built-in function open>
+    │    │    └ <module 'io' (frozen)>
+    │    └ None
+    └ <zipfile.ZipFile [closed]>
+
+OSError: [Errno 22] Invalid argument: 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+2026-09-02 10:06:52.977 | ERROR    | node_pdf_to_md.py   :<module>       :286  - [node_pdf_to_md] 节点异常，追踪ID=test_pdf2md_task_001
+Traceback (most recent call last):
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 286, in <module>
+    node_pdf_to_md(test_state)
+    │              └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+    └ <function node_pdf_to_md at 0x000001DE4ECBCA40>
+
+> File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 123, in wrapper
+    result = func(state, *args, **kwargs)
+             │    │       │       └ {}
+             │    │       └ ()
+             │    └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+             └ <function node_pdf_to_md at 0x000001DE4ECBC9A0>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 252, in node_pdf_to_md
+    final_md_path = step_3_download_and_extract(zip_url,local_dir_obj,pdf_path_obj.stem)
+                    │                           │       │             │            └ <property object at 0x000001DE4B390040>
+                    │                           │       │             └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/doc/hak180产品安全手册.pdf')
+                    │                           │       └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/output')
+                    │                           └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+                    └ <function step_3_download_and_extract at 0x000001DE4ECBC900>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 145, in wrapper
+    result = func(*args, **kwargs)
+             │     │       └ {}
+             │     └ ('https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip', WindowsPath('D:/TeacheSGG/work...
+             └ <function step_3_download_and_extract at 0x000001DE4ECBC860>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 206, in step_3_download_and_extract
+    with zipfile.ZipFile(zip_url) as zip_file:
+         │       │       └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+         │       └ <class 'zipfile.ZipFile'>
+         └ <module 'zipfile' from 'C:\\Users\\20697\\AppData\\Roaming\\uv\\python\\cpython-3.11-windows-x86_64-none\\Lib\\zipfile.py'>
+
+  File "C:\Users\20697\AppData\Roaming\uv\python\cpython-3.11-windows-x86_64-none\Lib\zipfile.py", line 1312, in __init__
+    self.fp = io.open(file, filemode)
+    │    │    │  │    │     └ 'rb'
+    │    │    │  │    └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+    │    │    │  └ <built-in function open>
+    │    │    └ <module 'io' (frozen)>
+    │    └ None
+    └ <zipfile.ZipFile [closed]>
+
+OSError: [Errno 22] Invalid argument: 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+2026-09-02 10:09:41.240 | INFO     | node_pdf_to_md.py   :<module>       :271  - ===== 开始node_pdf_to_md节点单元测试 =====
+2026-09-02 10:09:41.413 | INFO     | node_pdf_to_md.py   :<module>       :274  - 测试获取根地址：D:\TeacheSGG\workspace\knowledge_base
+2026-09-02 10:09:41.414 | INFO     | node_pdf_to_md.py   :<module>       :286  - [node_pdf_to_md] 节点开始，追踪ID=test_pdf2md_task_001
+2026-09-02 10:09:41.416 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :248  - [step_1_validate_paths] 步骤开始
+2026-09-02 10:09:41.418 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :248  - [step_1_validate_paths] 步骤完成，耗时=1ms
+2026-09-02 10:09:41.419 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :250  - [step_2_upload_and_poll] 步骤开始
+2026-09-02 10:09:46.700 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :250  - [step_2_upload_and_poll] 步骤完成，耗时=5281ms
+2026-09-02 10:09:46.702 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :252  - [step_3_upload_and_poll] 步骤开始
+2026-09-02 10:09:47.509 | ERROR    | node_pdf_to_md.py   :node_pdf_to_md :252  - [step_3_upload_and_poll] 步骤异常
+Traceback (most recent call last):
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 286, in <module>
+    node_pdf_to_md(test_state)
+    │              └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+    └ <function node_pdf_to_md at 0x00000152EE7CCA40>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 123, in wrapper
+    result = func(state, *args, **kwargs)
+             │    │       │       └ {}
+             │    │       └ ()
+             │    └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+             └ <function node_pdf_to_md at 0x00000152EE7CC9A0>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 252, in node_pdf_to_md
+    final_md_path = step_3_download_and_extract(zip_url,local_dir_obj,pdf_path_obj.stem)
+                    │                           │       │             │            └ <property object at 0x00000152EAEA0270>
+                    │                           │       │             └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/doc/hak180产品安全手册.pdf')
+                    │                           │       └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/output')
+                    │                           └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+                    └ <function step_3_download_and_extract at 0x00000152EE7CC900>
+
+> File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 145, in wrapper
+    result = func(*args, **kwargs)
+             │     │       └ {}
+             │     └ ('https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip', WindowsPath('D:/TeacheSGG/work...
+             └ <function step_3_download_and_extract at 0x00000152EE7CC860>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 206, in step_3_download_and_extract
+    with zipfile.ZipFile(zip_url) as zip_file:
+         │       │       └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+         │       └ <class 'zipfile.ZipFile'>
+         └ <module 'zipfile' from 'C:\\Users\\20697\\AppData\\Roaming\\uv\\python\\cpython-3.11-windows-x86_64-none\\Lib\\zipfile.py'>
+
+  File "C:\Users\20697\AppData\Roaming\uv\python\cpython-3.11-windows-x86_64-none\Lib\zipfile.py", line 1312, in __init__
+    self.fp = io.open(file, filemode)
+    │    │    │  │    │     └ 'rb'
+    │    │    │  │    └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+    │    │    │  └ <built-in function open>
+    │    │    └ <module 'io' (frozen)>
+    │    └ None
+    └ <zipfile.ZipFile [closed]>
+
+OSError: [Errno 22] Invalid argument: 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+2026-09-02 10:09:47.513 | ERROR    | node_pdf_to_md.py   :<module>       :286  - [node_pdf_to_md] 节点异常，追踪ID=test_pdf2md_task_001
+Traceback (most recent call last):
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 286, in <module>
+    node_pdf_to_md(test_state)
+    │              └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+    └ <function node_pdf_to_md at 0x00000152EE7CCA40>
+
+> File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 123, in wrapper
+    result = func(state, *args, **kwargs)
+             │    │       │       └ {}
+             │    │       └ ()
+             │    └ {'task_id': 'test_pdf2md_task_001', 'is_pdf_read_enabled': False, 'is_md_read_enabled': False, 'local_dir': 'D:\\TeacheSGG\\w...
+             └ <function node_pdf_to_md at 0x00000152EE7CC9A0>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 252, in node_pdf_to_md
+    final_md_path = step_3_download_and_extract(zip_url,local_dir_obj,pdf_path_obj.stem)
+                    │                           │       │             │            └ <property object at 0x00000152EAEA0270>
+                    │                           │       │             └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/doc/hak180产品安全手册.pdf')
+                    │                           │       └ WindowsPath('D:/TeacheSGG/workspace/knowledge_base/output')
+                    │                           └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+                    └ <function step_3_download_and_extract at 0x00000152EE7CC900>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 145, in wrapper
+    result = func(*args, **kwargs)
+             │     │       └ {}
+             │     └ ('https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip', WindowsPath('D:/TeacheSGG/work...
+             └ <function step_3_download_and_extract at 0x00000152EE7CC860>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_pdf_to_md.py", line 206, in step_3_download_and_extract
+    with zipfile.ZipFile(zip_url) as zip_file:
+         │       │       └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+         │       └ <class 'zipfile.ZipFile'>
+         └ <module 'zipfile' from 'C:\\Users\\20697\\AppData\\Roaming\\uv\\python\\cpython-3.11-windows-x86_64-none\\Lib\\zipfile.py'>
+
+  File "C:\Users\20697\AppData\Roaming\uv\python\cpython-3.11-windows-x86_64-none\Lib\zipfile.py", line 1312, in __init__
+    self.fp = io.open(file, filemode)
+    │    │    │  │    │     └ 'rb'
+    │    │    │  │    └ 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+    │    │    │  └ <built-in function open>
+    │    │    └ <module 'io' (frozen)>
+    │    └ None
+    └ <zipfile.ZipFile [closed]>
+
+OSError: [Errno 22] Invalid argument: 'https://cdn-mineru.openxlab.org.cn/pdf/2026-07-29/cde5185a-1942-4849-a5e3-293fcaea5bfe.zip'
+2026-09-02 10:30:54.141 | INFO     | node_pdf_to_md.py   :<module>       :271  - ===== 开始node_pdf_to_md节点单元测试 =====
+2026-09-02 10:30:54.353 | INFO     | node_pdf_to_md.py   :<module>       :274  - 测试获取根地址：D:\TeacheSGG\workspace\knowledge_base
+2026-09-02 10:30:54.355 | INFO     | node_pdf_to_md.py   :<module>       :286  - [node_pdf_to_md] 节点开始，追踪ID=test_pdf2md_task_001
+2026-09-02 10:30:54.356 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :248  - [step_1_validate_paths] 步骤开始
+2026-09-02 10:30:54.358 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :248  - [step_1_validate_paths] 步骤完成，耗时=2ms
+2026-09-02 10:30:54.359 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :250  - [step_2_upload_and_poll] 步骤开始
+2026-09-02 10:31:00.430 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :250  - [step_2_upload_and_poll] 步骤完成，耗时=6071ms
+2026-09-02 10:31:00.432 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :252  - [step_3_upload_and_poll] 步骤开始
+2026-09-02 10:31:31.049 | INFO     | node_pdf_to_md.py   :node_pdf_to_md :252  - [step_3_upload_and_poll] 步骤完成，耗时=30617ms
+2026-09-02 10:31:31.052 | INFO     | node_pdf_to_md.py   :<module>       :286  - [node_pdf_to_md] 节点完成，追踪ID=test_pdf2md_task_001，耗时=36697ms
+2026-09-02 10:31:31.053 | INFO     | node_pdf_to_md.py   :<module>       :288  - ===== 结束node_pdf_to_md节点单元测试 =====
+2026-09-02 20:49:55.780 | INFO     | node_item_name_recognition.py:<module>       :187  - === 开始执行商品名称识别节点本地测试 ===
+2026-09-02 20:49:55.785 | INFO     | node_item_name_recognition.py:<module>       :212  - [node_item_name_recognition] 节点开始，追踪ID=test_task_123456
+2026-09-02 20:49:55.787 | INFO     | node_item_name_recognition.py:node_item_name_recognition:169  - [step_1_get_chunks_and_file_title] 步骤开始
+2026-09-02 20:49:55.789 | INFO     | node_item_name_recognition.py:node_item_name_recognition:169  - [step_1_get_chunks_and_file_title] 步骤完成，耗时=1ms
+2026-09-02 20:49:55.790 | INFO     | node_item_name_recognition.py:node_item_name_recognition:171  - [step_2_build_context] 步骤开始
+2026-09-02 20:49:55.794 | INFO     | node_item_name_recognition.py:node_item_name_recognition:171  - [step_2_build_context] 步骤完成，耗时=4ms
+2026-09-02 20:49:55.796 | INFO     | node_item_name_recognition.py:node_item_name_recognition:174  - [step_3_call_llm] 步骤开始
+2026-09-02 20:49:55.799 | ERROR    | node_item_name_recognition.py:node_item_name_recognition:174  - [step_3_call_llm] 步骤异常
+Traceback (most recent call last):
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_item_name_recognition.py", line 212, in <module>
+    result_state = node_item_name_recognition(mock_state)
+                   │                          └ {'task_id': 'test_task_123456', 'file_title': '华为Mate60 Pro手机使用说明书', 'file_name': '华为Mate60Pro说明书.pdf', 'chunks': [{'title': ...
+                   └ <function node_item_name_recognition at 0x000002048FF456C0>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 123, in wrapper
+    result = func(state, *args, **kwargs)
+             │    │       │       └ {}
+             │    │       └ ()
+             │    └ {'task_id': 'test_task_123456', 'file_title': '华为Mate60 Pro手机使用说明书', 'file_name': '华为Mate60Pro说明书.pdf', 'chunks': [{'title': ...
+             └ <function node_item_name_recognition at 0x000002048FF45620>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_item_name_recognition.py", line 174, in node_item_name_recognition
+    item_name = step_3_call_llm(context,file_title)
+                │               │       └ '华为Mate60 Pro手机使用说明书'
+                │               └ '切片：1，标题：产品简介，内容：华为Mate60 Pro是华为公司2023年发布的旗舰智能手机，搭载麒麟9000S芯片，支持卫星通话功能，屏幕尺寸6.82英寸，分辨率2700×1224。\n\n切片：2，标题：拍照功能，内容：华为Mate60 Pr...
+                └ <function step_3_call_llm at 0x000002048FF451C0>
+
+> File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 145, in wrapper
+    result = func(*args, **kwargs)
+             │     │       └ {}
+             │     └ ('切片：1，标题：产品简介，内容：华为Mate60 Pro是华为公司2023年发布的旗舰智能手机，搭载麒麟9000S芯片，支持卫星通话功能，屏幕尺寸6.82英寸，分辨率2700×1224。\n\n切片：2，标题：拍照功能，内容：华为Mate60 P...
+             └ <function step_3_call_llm at 0x000002048FF45120>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_item_name_recognition.py", line 67, in step_3_call_llm
+    human_prompt = load_prompt("item_name_recognition_human_prompt",file_title=file_title,context=context)
+                   │                                                           │                  └ '切片：1，标题：产品简介，内容：华为Mate60 Pro是华为公司2023年发布的旗舰智能手机，搭载麒麟9000S芯片，支持卫星通话功能，屏幕尺寸6.82英寸，分辨率2700×1224。\n\n切片：2，标题：拍照功能，内容：华为Mate60 Pr...
+                   │                                                           └ '华为Mate60 Pro手机使用说明书'
+                   └ <function load_prompt at 0x00000204E2FAF420>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\core\load_prompt.py", line 17, in load_prompt
+    raise FileNotFoundError(f"提示词文件不存在：{prompt_path.absolute()}")
+
+FileNotFoundError: 提示词文件不存在：D:\TeacheSGG\workspace\knowledge_base\prompts\item_name_recognition_human_prompt.prompt
+2026-09-02 20:49:55.804 | ERROR    | node_item_name_recognition.py:<module>       :212  - [node_item_name_recognition] 节点异常，追踪ID=test_task_123456
+Traceback (most recent call last):
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_item_name_recognition.py", line 212, in <module>
+    result_state = node_item_name_recognition(mock_state)
+                   │                          └ {'task_id': 'test_task_123456', 'file_title': '华为Mate60 Pro手机使用说明书', 'file_name': '华为Mate60Pro说明书.pdf', 'chunks': [{'title': ...
+                   └ <function node_item_name_recognition at 0x000002048FF456C0>
+
+> File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 123, in wrapper
+    result = func(state, *args, **kwargs)
+             │    │       │       └ {}
+             │    │       └ ()
+             │    └ {'task_id': 'test_task_123456', 'file_title': '华为Mate60 Pro手机使用说明书', 'file_name': '华为Mate60Pro说明书.pdf', 'chunks': [{'title': ...
+             └ <function node_item_name_recognition at 0x000002048FF45620>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_item_name_recognition.py", line 174, in node_item_name_recognition
+    item_name = step_3_call_llm(context,file_title)
+                │               │       └ '华为Mate60 Pro手机使用说明书'
+                │               └ '切片：1，标题：产品简介，内容：华为Mate60 Pro是华为公司2023年发布的旗舰智能手机，搭载麒麟9000S芯片，支持卫星通话功能，屏幕尺寸6.82英寸，分辨率2700×1224。\n\n切片：2，标题：拍照功能，内容：华为Mate60 Pr...
+                └ <function step_3_call_llm at 0x000002048FF451C0>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 145, in wrapper
+    result = func(*args, **kwargs)
+             │     │       └ {}
+             │     └ ('切片：1，标题：产品简介，内容：华为Mate60 Pro是华为公司2023年发布的旗舰智能手机，搭载麒麟9000S芯片，支持卫星通话功能，屏幕尺寸6.82英寸，分辨率2700×1224。\n\n切片：2，标题：拍照功能，内容：华为Mate60 P...
+             └ <function step_3_call_llm at 0x000002048FF45120>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_item_name_recognition.py", line 67, in step_3_call_llm
+    human_prompt = load_prompt("item_name_recognition_human_prompt",file_title=file_title,context=context)
+                   │                                                           │                  └ '切片：1，标题：产品简介，内容：华为Mate60 Pro是华为公司2023年发布的旗舰智能手机，搭载麒麟9000S芯片，支持卫星通话功能，屏幕尺寸6.82英寸，分辨率2700×1224。\n\n切片：2，标题：拍照功能，内容：华为Mate60 Pr...
+                   │                                                           └ '华为Mate60 Pro手机使用说明书'
+                   └ <function load_prompt at 0x00000204E2FAF420>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\core\load_prompt.py", line 17, in load_prompt
+    raise FileNotFoundError(f"提示词文件不存在：{prompt_path.absolute()}")
+
+FileNotFoundError: 提示词文件不存在：D:\TeacheSGG\workspace\knowledge_base\prompts\item_name_recognition_human_prompt.prompt
+2026-09-02 20:49:55.811 | ERROR    | node_item_name_recognition.py:<module>       :222  - 商品名称识别节点本地测试失败，原因：提示词文件不存在：D:\TeacheSGG\workspace\knowledge_base\prompts\item_name_recognition_human_prompt.prompt
+2026-09-02 20:55:06.221 | INFO     | node_item_name_recognition.py:<module>       :187  - === 开始执行商品名称识别节点本地测试 ===
+2026-09-02 20:55:06.224 | INFO     | node_item_name_recognition.py:<module>       :212  - [node_item_name_recognition] 节点开始，追踪ID=test_task_123456
+2026-09-02 20:55:06.227 | INFO     | node_item_name_recognition.py:node_item_name_recognition:169  - [step_1_get_chunks_and_file_title] 步骤开始
+2026-09-02 20:55:06.229 | INFO     | node_item_name_recognition.py:node_item_name_recognition:169  - [step_1_get_chunks_and_file_title] 步骤完成，耗时=1ms
+2026-09-02 20:55:06.230 | INFO     | node_item_name_recognition.py:node_item_name_recognition:171  - [step_2_build_context] 步骤开始
+2026-09-02 20:55:06.232 | INFO     | node_item_name_recognition.py:node_item_name_recognition:171  - [step_2_build_context] 步骤完成，耗时=2ms
+2026-09-02 20:55:06.233 | INFO     | node_item_name_recognition.py:node_item_name_recognition:174  - [step_3_call_llm] 步骤开始
+2026-09-02 20:55:06.237 | INFO     | lm_utils.py         :get_llm_client :44   - [LLM客户端] 开始初始化新实例：模型=qwen-flash，JSON模式=False
+2026-09-02 20:55:07.387 | INFO     | lm_utils.py         :get_llm_client :71   - [LLM客户端] 实例初始化成功并缓存：模型=qwen-flash，JSON模式=False
+2026-09-02 20:55:09.626 | ERROR    | node_item_name_recognition.py:node_item_name_recognition:174  - [step_3_call_llm] 步骤异常
+Traceback (most recent call last):
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_item_name_recognition.py", line 212, in <module>
+    result_state = node_item_name_recognition(mock_state)
+                   │                          └ {'task_id': 'test_task_123456', 'file_title': '华为Mate60 Pro手机使用说明书', 'file_name': '华为Mate60Pro说明书.pdf', 'chunks': [{'title': ...
+                   └ <function node_item_name_recognition at 0x000001D5E99C20C0>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 123, in wrapper
+    result = func(state, *args, **kwargs)
+             │    │       │       └ {}
+             │    │       └ ()
+             │    └ {'task_id': 'test_task_123456', 'file_title': '华为Mate60 Pro手机使用说明书', 'file_name': '华为Mate60Pro说明书.pdf', 'chunks': [{'title': ...
+             └ <function node_item_name_recognition at 0x000001D5E99C2020>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_item_name_recognition.py", line 174, in node_item_name_recognition
+    item_name = step_3_call_llm(context,file_title)
+                │               │       └ '华为Mate60 Pro手机使用说明书'
+                │               └ '切片：1，标题：产品简介，内容：华为Mate60 Pro是华为公司2023年发布的旗舰智能手机，搭载麒麟9000S芯片，支持卫星通话功能，屏幕尺寸6.82英寸，分辨率2700×1224。\n\n切片：2，标题：拍照功能，内容：华为Mate60 Pr...
+                └ <function step_3_call_llm at 0x000001D5E99C1BC0>
+
+> File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 145, in wrapper
+    result = func(*args, **kwargs)
+             │     │       └ {}
+             │     └ ('切片：1，标题：产品简介，内容：华为Mate60 Pro是华为公司2023年发布的旗舰智能手机，搭载麒麟9000S芯片，支持卫星通话功能，屏幕尺寸6.82英寸，分辨率2700×1224。\n\n切片：2，标题：拍照功能，内容：华为Mate60 P...
+             └ <function step_3_call_llm at 0x000001D5E99C1B20>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_item_name_recognition.py", line 77, in step_3_call_llm
+    item_name = chain.invoke(messages)
+                │     │      └ [SystemMessage(content='你是商品识别专家，只输出识别的字符串即可！', additional_kwargs={}, response_metadata={}), HumanMessage(content='请从以下信息中识别出...
+                │     └ <function RunnableSequence.invoke at 0x000001D5BE071940>
+                └ ChatOpenAI(profile={}, client=<openai.resources.chat.completions.completions.Completions object at 0x000001D5E82F2390>, async...
+
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\langchain_core\runnables\base.py", line 3155, in invoke
+    input_ = context.run(step.invoke, input_, config, **kwargs)
+             │       │   │    │       │       │         └ {}
+             │       │   │    │       │       └ {'tags': [], 'metadata': {}, 'callbacks': <langchain_core.callbacks.manager.CallbackManager object at 0x000001D5EA07A450>, 'r...
+             │       │   │    │       └ [SystemMessage(content='你是商品识别专家，只输出识别的字符串即可！', additional_kwargs={}, response_metadata={}), HumanMessage(content='请从以下信息中识别出...
+             │       │   │    └ <function BaseChatModel.invoke at 0x000001D5E82ED940>
+             │       │   └ ChatOpenAI(profile={}, client=<openai.resources.chat.completions.completions.Completions object at 0x000001D5E82F2390>, async...
+             │       └ <method 'run' of '_contextvars.Context' objects>
+             └ <_contextvars.Context object at 0x000001D5EA07A800>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\langchain_core\language_models\chat_models.py", line 402, in invoke
+    self.generate_prompt(
+    │    └ <function BaseChatModel.generate_prompt at 0x000001D5E82EC5E0>
+    └ ChatOpenAI(profile={}, client=<openai.resources.chat.completions.completions.Completions object at 0x000001D5E82F2390>, async...
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\langchain_core\language_models\chat_models.py", line 1149, in generate_prompt
+    return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+           │    │        │                     │               │            └ {'tags': [], 'metadata': {}, 'run_name': None, 'run_id': None}
+           │    │        │                     │               └ <langchain_core.callbacks.manager.CallbackManager object at 0x000001D5EA07AC90>
+           │    │        │                     └ None
+           │    │        └ [[SystemMessage(content='你是商品识别专家，只输出识别的字符串即可！', additional_kwargs={}, response_metadata={}), HumanMessage(content='请从以下信息中识别...
+           │    └ <function BaseChatModel.generate at 0x000001D5E82ECA40>
+           └ ChatOpenAI(profile={}, client=<openai.resources.chat.completions.completions.Completions object at 0x000001D5E82F2390>, async...
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\langchain_core\language_models\chat_models.py", line 958, in generate
+    self._generate_with_cache(
+    │    └ <function BaseChatModel._generate_with_cache at 0x000001D5E82EC540>
+    └ ChatOpenAI(profile={}, client=<openai.resources.chat.completions.completions.Completions object at 0x000001D5E82F2390>, async...
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\langchain_core\language_models\chat_models.py", line 1261, in _generate_with_cache
+    result = self._generate(
+             │    └ <function BaseChatOpenAI._generate at 0x000001D5E845B9C0>
+             └ ChatOpenAI(profile={}, client=<openai.resources.chat.completions.completions.Completions object at 0x000001D5E82F2390>, async...
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\langchain_openai\chat_models\base.py", line 1490, in _generate
+    _handle_openai_bad_request(e)
+    └ <function _handle_openai_bad_request at 0x000001D5E845AC00>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\langchain_openai\chat_models\base.py", line 1487, in _generate
+    raw_response = self.client.with_raw_response.create(**payload)
+                   │    │      │                 │        └ {'model': 'qwen-flash', 'stream': False, 'extra_body': {'enable_thinking': False}, 'temperature': 0.1, 'messages': [{'content...
+                   │    │      │                 └ <function Completions.create at 0x000001D5EA084540>
+                   │    │      └ <openai.resources.chat.completions.completions.CompletionsWithRawResponse object at 0x000001D5E833E190>
+                   │    └ <openai.resources.chat.completions.completions.Completions object at 0x000001D5E82F2390>
+                   └ ChatOpenAI(profile={}, client=<openai.resources.chat.completions.completions.Completions object at 0x000001D5E82F2390>, async...
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\openai\_legacy_response.py", line 367, in wrapped
+    return cast(LegacyAPIResponse[R], func(*args, **kwargs))
+           │    │                 │   │     │       └ {'model': 'qwen-flash', 'stream': False, 'extra_body': {'enable_thinking': False}, 'temperature': 0.1, 'messages': [{'content...
+           │    │                 │   │     └ ()
+           │    │                 │   └ <bound method Completions.create of <openai.resources.chat.completions.completions.Completions object at 0x000001D5E82F2390>>
+           │    │                 └ ~R
+           │    └ <class 'openai._legacy_response.LegacyAPIResponse'>
+           └ <function cast at 0x000001D5A0D2AA20>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\openai\_utils\_utils.py", line 286, in wrapper
+    return func(*args, **kwargs)
+           │     │       └ {'model': 'qwen-flash', 'stream': False, 'extra_body': {'enable_thinking': False}, 'temperature': 0.1, 'messages': [{'content...
+           │     └ (<openai.resources.chat.completions.completions.Completions object at 0x000001D5E82F2390>,)
+           └ <function Completions.create at 0x000001D5E9C96F20>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\openai\resources\chat\completions\completions.py", line 1211, in create
+    return self._post(
+           │    └ <bound method SyncAPIClient.post of <openai.OpenAI object at 0x000001D5E976CFD0>>
+           └ <openai.resources.chat.completions.completions.Completions object at 0x000001D5E82F2390>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\openai\_base_client.py", line 1297, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+           │    │          │    │       │        │            │                  └ openai.Stream[openai.types.chat.chat_completion_chunk.ChatCompletionChunk]
+           │    │          │    │       │        │            └ False
+           │    │          │    │       │        └ FinalRequestOptions(method='post', url='/chat/completions', params={}, headers={'X-Stainless-Raw-Response': 'true'}, max_retr...
+           │    │          │    │       └ <class 'openai.types.chat.chat_completion.ChatCompletion'>
+           │    │          │    └ <function SyncAPIClient.request at 0x000001D5E80C3100>
+           │    │          └ <openai.OpenAI object at 0x000001D5E976CFD0>
+           │    └ ~ResponseT
+           └ <function cast at 0x000001D5A0D2AA20>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\openai\_base_client.py", line 1070, in request
+    raise self._make_status_error_from_response(err.response) from None
+          │    └ <function BaseClient._make_status_error_from_response at 0x000001D5E80C18A0>
+          └ <openai.OpenAI object at 0x000001D5E976CFD0>
+
+openai.BadRequestError: Error code: 400 - {'error': {'code': 'invalid_request', 'message': 'currently model qwen-flash is not support'}}
+2026-09-02 20:55:09.653 | ERROR    | node_item_name_recognition.py:<module>       :212  - [node_item_name_recognition] 节点异常，追踪ID=test_task_123456
+Traceback (most recent call last):
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_item_name_recognition.py", line 212, in <module>
+    result_state = node_item_name_recognition(mock_state)
+                   │                          └ {'task_id': 'test_task_123456', 'file_title': '华为Mate60 Pro手机使用说明书', 'file_name': '华为Mate60Pro说明书.pdf', 'chunks': [{'title': ...
+                   └ <function node_item_name_recognition at 0x000001D5E99C20C0>
+
+> File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 123, in wrapper
+    result = func(state, *args, **kwargs)
+             │    │       │       └ {}
+             │    │       └ ()
+             │    └ {'task_id': 'test_task_123456', 'file_title': '华为Mate60 Pro手机使用说明书', 'file_name': '华为Mate60Pro说明书.pdf', 'chunks': [{'title': ...
+             └ <function node_item_name_recognition at 0x000001D5E99C2020>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_item_name_recognition.py", line 174, in node_item_name_recognition
+    item_name = step_3_call_llm(context,file_title)
+                │               │       └ '华为Mate60 Pro手机使用说明书'
+                │               └ '切片：1，标题：产品简介，内容：华为Mate60 Pro是华为公司2023年发布的旗舰智能手机，搭载麒麟9000S芯片，支持卫星通话功能，屏幕尺寸6.82英寸，分辨率2700×1224。\n\n切片：2，标题：拍照功能，内容：华为Mate60 Pr...
+                └ <function step_3_call_llm at 0x000001D5E99C1BC0>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\core\logger.py", line 145, in wrapper
+    result = func(*args, **kwargs)
+             │     │       └ {}
+             │     └ ('切片：1，标题：产品简介，内容：华为Mate60 Pro是华为公司2023年发布的旗舰智能手机，搭载麒麟9000S芯片，支持卫星通话功能，屏幕尺寸6.82英寸，分辨率2700×1224。\n\n切片：2，标题：拍照功能，内容：华为Mate60 P...
+             └ <function step_3_call_llm at 0x000001D5E99C1B20>
+
+  File "D:\TeacheSGG\workspace\knowledge_base\app\import_process\agent\nodes\node_item_name_recognition.py", line 77, in step_3_call_llm
+    item_name = chain.invoke(messages)
+                │     │      └ [SystemMessage(content='你是商品识别专家，只输出识别的字符串即可！', additional_kwargs={}, response_metadata={}), HumanMessage(content='请从以下信息中识别出...
+                │     └ <function RunnableSequence.invoke at 0x000001D5BE071940>
+                └ ChatOpenAI(profile={}, client=<openai.resources.chat.completions.completions.Completions object at 0x000001D5E82F2390>, async...
+
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\langchain_core\runnables\base.py", line 3155, in invoke
+    input_ = context.run(step.invoke, input_, config, **kwargs)
+             │       │   │    │       │       │         └ {}
+             │       │   │    │       │       └ {'tags': [], 'metadata': {}, 'callbacks': <langchain_core.callbacks.manager.CallbackManager object at 0x000001D5EA07A450>, 'r...
+             │       │   │    │       └ [SystemMessage(content='你是商品识别专家，只输出识别的字符串即可！', additional_kwargs={}, response_metadata={}), HumanMessage(content='请从以下信息中识别出...
+             │       │   │    └ <function BaseChatModel.invoke at 0x000001D5E82ED940>
+             │       │   └ ChatOpenAI(profile={}, client=<openai.resources.chat.completions.completions.Completions object at 0x000001D5E82F2390>, async...
+             │       └ <method 'run' of '_contextvars.Context' objects>
+             └ <_contextvars.Context object at 0x000001D5EA07A800>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\langchain_core\language_models\chat_models.py", line 402, in invoke
+    self.generate_prompt(
+    │    └ <function BaseChatModel.generate_prompt at 0x000001D5E82EC5E0>
+    └ ChatOpenAI(profile={}, client=<openai.resources.chat.completions.completions.Completions object at 0x000001D5E82F2390>, async...
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\langchain_core\language_models\chat_models.py", line 1149, in generate_prompt
+    return self.generate(prompt_messages, stop=stop, callbacks=callbacks, **kwargs)
+           │    │        │                     │               │            └ {'tags': [], 'metadata': {}, 'run_name': None, 'run_id': None}
+           │    │        │                     │               └ <langchain_core.callbacks.manager.CallbackManager object at 0x000001D5EA07AC90>
+           │    │        │                     └ None
+           │    │        └ [[SystemMessage(content='你是商品识别专家，只输出识别的字符串即可！', additional_kwargs={}, response_metadata={}), HumanMessage(content='请从以下信息中识别...
+           │    └ <function BaseChatModel.generate at 0x000001D5E82ECA40>
+           └ ChatOpenAI(profile={}, client=<openai.resources.chat.completions.completions.Completions object at 0x000001D5E82F2390>, async...
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\langchain_core\language_models\chat_models.py", line 958, in generate
+    self._generate_with_cache(
+    │    └ <function BaseChatModel._generate_with_cache at 0x000001D5E82EC540>
+    └ ChatOpenAI(profile={}, client=<openai.resources.chat.completions.completions.Completions object at 0x000001D5E82F2390>, async...
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\langchain_core\language_models\chat_models.py", line 1261, in _generate_with_cache
+    result = self._generate(
+             │    └ <function BaseChatOpenAI._generate at 0x000001D5E845B9C0>
+             └ ChatOpenAI(profile={}, client=<openai.resources.chat.completions.completions.Completions object at 0x000001D5E82F2390>, async...
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\langchain_openai\chat_models\base.py", line 1490, in _generate
+    _handle_openai_bad_request(e)
+    └ <function _handle_openai_bad_request at 0x000001D5E845AC00>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\langchain_openai\chat_models\base.py", line 1487, in _generate
+    raw_response = self.client.with_raw_response.create(**payload)
+                   │    │      │                 │        └ {'model': 'qwen-flash', 'stream': False, 'extra_body': {'enable_thinking': False}, 'temperature': 0.1, 'messages': [{'content...
+                   │    │      │                 └ <function Completions.create at 0x000001D5EA084540>
+                   │    │      └ <openai.resources.chat.completions.completions.CompletionsWithRawResponse object at 0x000001D5E833E190>
+                   │    └ <openai.resources.chat.completions.completions.Completions object at 0x000001D5E82F2390>
+                   └ ChatOpenAI(profile={}, client=<openai.resources.chat.completions.completions.Completions object at 0x000001D5E82F2390>, async...
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\openai\_legacy_response.py", line 367, in wrapped
+    return cast(LegacyAPIResponse[R], func(*args, **kwargs))
+           │    │                 │   │     │       └ {'model': 'qwen-flash', 'stream': False, 'extra_body': {'enable_thinking': False}, 'temperature': 0.1, 'messages': [{'content...
+           │    │                 │   │     └ ()
+           │    │                 │   └ <bound method Completions.create of <openai.resources.chat.completions.completions.Completions object at 0x000001D5E82F2390>>
+           │    │                 └ ~R
+           │    └ <class 'openai._legacy_response.LegacyAPIResponse'>
+           └ <function cast at 0x000001D5A0D2AA20>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\openai\_utils\_utils.py", line 286, in wrapper
+    return func(*args, **kwargs)
+           │     │       └ {'model': 'qwen-flash', 'stream': False, 'extra_body': {'enable_thinking': False}, 'temperature': 0.1, 'messages': [{'content...
+           │     └ (<openai.resources.chat.completions.completions.Completions object at 0x000001D5E82F2390>,)
+           └ <function Completions.create at 0x000001D5E9C96F20>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\openai\resources\chat\completions\completions.py", line 1211, in create
+    return self._post(
+           │    └ <bound method SyncAPIClient.post of <openai.OpenAI object at 0x000001D5E976CFD0>>
+           └ <openai.resources.chat.completions.completions.Completions object at 0x000001D5E82F2390>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\openai\_base_client.py", line 1297, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+           │    │          │    │       │        │            │                  └ openai.Stream[openai.types.chat.chat_completion_chunk.ChatCompletionChunk]
+           │    │          │    │       │        │            └ False
+           │    │          │    │       │        └ FinalRequestOptions(method='post', url='/chat/completions', params={}, headers={'X-Stainless-Raw-Response': 'true'}, max_retr...
+           │    │          │    │       └ <class 'openai.types.chat.chat_completion.ChatCompletion'>
+           │    │          │    └ <function SyncAPIClient.request at 0x000001D5E80C3100>
+           │    │          └ <openai.OpenAI object at 0x000001D5E976CFD0>
+           │    └ ~ResponseT
+           └ <function cast at 0x000001D5A0D2AA20>
+  File "D:\TeacheSGG\workspace\knowledge_base\.venv\Lib\site-packages\openai\_base_client.py", line 1070, in request
+    raise self._make_status_error_from_response(err.response) from None
+          │    └ <function BaseClient._make_status_error_from_response at 0x000001D5E80C18A0>
+          └ <openai.OpenAI object at 0x000001D5E976CFD0>
+
+openai.BadRequestError: Error code: 400 - {'error': {'code': 'invalid_request', 'message': 'currently model qwen-flash is not support'}}
