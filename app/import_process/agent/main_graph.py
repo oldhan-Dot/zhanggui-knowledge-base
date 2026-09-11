@@ -17,13 +17,13 @@ load_dotenv()
 #构件图
 workflow = StateGraph(ImportGraphState)
 #构建节点
-workflow.add_edge(node_entry)
-workflow.add_edge(node_pdf_to_md)
-workflow.add_edge(node_md_img)
-workflow.add_edge(node_document_split)
-workflow.add_edge(node_item_name_recognition)
-workflow.add_edge(node_bge_embedding)
-workflow.add_edge(node_import_milvus)
+workflow.add_node(node_entry)
+workflow.add_node(node_pdf_to_md)
+workflow.add_node(node_md_img)
+workflow.add_node(node_document_split)
+workflow.add_node(node_item_name_recognition)
+workflow.add_node(node_bge_embedding)
+workflow.add_node(node_import_milvus)
 # 创建条件边的路径函数
 # 判断state中的is_md_read_enabled、is_pdf_read_enabled，决定下一个节点
 def condition_fun(state : ImportGraphState):
@@ -39,7 +39,7 @@ def condition_fun(state : ImportGraphState):
 
 #设置工作流入口
 workflow.set_entry_point("node_entry")
-workflow.set_conditional_edges("node_entry",condition_fun,
+workflow.add_conditional_edges("node_entry",condition_fun,
                                      {"node_md_img":"node_md_img",
                                     "node_pdf_to_md": "node_pdf_to_md",
                                             END: END

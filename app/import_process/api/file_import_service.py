@@ -24,7 +24,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-@app.get("/import")
+@app.get("/import.html")
 def import_file():
 #获取import_file的路径  #PROJECT_ROOT是path对象,拼接后也是path对象
     import_file_path= PROJECT_ROOT / "app/import_process/page/import.html"
@@ -66,7 +66,7 @@ def run_graph_task(task_id,local_file_path,local_dir):
 #1.生成全局唯一的task-id
 #2.将文件保存到本地目录
 #3.启动后台任务(run_graph_task)开始处理
-@app.get("/upload")
+@app.post("/upload")
 async def upload_files(
     background_tasks:BackgroundTasks,
         files:List[UploadFile] = File(...)

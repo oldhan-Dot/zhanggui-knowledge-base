@@ -252,7 +252,7 @@ def node_pdf_to_md(state: ImportGraphState) -> ImportGraphState:
     #步骤3：下载和解压
     final_md_path = step_3_download_and_extract(zip_url,local_dir_obj,pdf_path_obj.stem)
     #更新状态中的md_path
-    state["md_content"] = final_md_path
+    state["md_path"] = final_md_path
     #将md的内容保存在状态中的md_content中
     with open(final_md_path, "r",encoding="utf-8") as f:
         state["md_content"] = f.read()
