@@ -24,8 +24,8 @@ def step_3_extract_info(original_query, history_list):
     history_text = ""
     for history in history_list:
         history_text += f"{history['role']}:{history['text']}\n"
-    #读取rewritten_query_and_itemnames.prompt文件获取提示词
-    prompt = load_prompt("rewritten_query_and_itemnames",history_text=history_text,query=original_query)
+    #读取rewritten_query_and_item_names.prompt文件获取提示词
+    prompt = load_prompt("rewritten_query_and_item_names",history_text=history_text,query=original_query)
     #构造调用大模型提示词
     messages = [{
         SystemMessage(content="你是一个专业的客服助手，擅长理解用户意图和提取关键信息。"),
@@ -234,7 +234,7 @@ def step_7_write_history(state, history_list, session_id, rewritten_query, messa
     #判断状态answer，若有值则保存历史纪录，若没有值更新历史记录
     if state.get("answer"):
         save_chat_message(session_id,"assistant",state["answer"],"",[])
-    #更新历史记录
+    #更新历史记录 (无message_id时新增记录，有message_id时更新已有记录)
     save_chat_message(
         session_id = session_id,#会话id，关联所属会话
         role="user",#消息角色：用户
