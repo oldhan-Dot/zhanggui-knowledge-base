@@ -1,4 +1,4 @@
-from langchain_classic.chains.hyde.prompts import web_search
+
 
 from app.core.logger import node_log, step_log, logger
 from app.lm.reranker_utils import get_reranker_model
@@ -107,7 +107,35 @@ def step_2_rerank_docs(state, doc_items):
             item["score"] = 0.0
         return doc_items
 
-
+@step_log("step_3_topk")
+def step_3_topk(scored_docs):
+    #硬上限：最多取前10条，取全局常量与实际文档数的较小值(避免索引越界)
+    #注：max_topk从全局常量读取，不依赖外部状态，保证逻辑一致性
+    max_topk = min(RERANK_MAX_TOPK, len(scored_docs))
+    min_topk = RERANK_MIN_TOPK#硬下限，至少保留文档数量(全局常量配置)
+    gap_ratio = RERANK_GAP_RATIO #相对断崖阈值：分数下降的相对比例阈值(全局常量配置)
+    gap_abs = RERANK_GAP_ABS #绝对断崖阈值：分数下降的绝对差值阀值(全局常量配置)
+    #创建表示真正动态topk的变量
+    topk = max_topk
+    #判断现有的数据是否能满足硬下限
+    #若能满足，则获取动态的上限
+    #若不能满足，则提供现有的所有数据
+    if topk > min_topk:
+        #循环遍历相邻的数据的分数差以及分数比例
+        for i in range(min_topk-1,topk-1):
+            #分别获取相邻的数据的分数
+            score1= scored_docs[i]["score"]
+            score2= scored_docs[i+1]["score"]
+            #分别获取分数差值和分数差值的比例
+            gap = score1 - score2
+            rel = gap / (abs(score1) + 1e-6)
+            # 判断分数差值和分数差值的比例是否大于等于绝对断崖阈值和相对断崖阈值
+            if gap > gap_abs or rel > gap_ratio:
+                #获取动态的topk
+                topk = i+1
+                break
+    scored_docs = scored_docs[:topk]
+    return scored_docs
 @node_log("node_rerank")
 def node_rerank(state: QueryGraphState):
     # 记录当前任务的状态为进行中
@@ -118,6 +146,8 @@ def node_rerank(state: QueryGraphState):
     doc_items = step_1_merge_docs(state)
     #阶段二：对文档进行重排序，[{text,title,doc_id,chunk_id,url,source}]
     scored_docs = step_2_rerank_docs(state, doc_items)
+    #阶段三：动态topk
+    topk_docs = step_3_topk(scored_docs)
     # 记录当前任务的状态为已完成
     add_done_task(state["session_id"], "node_rerank", state["is_stream"])
-    return state
+    return {"reranked_docs": topk_docs}

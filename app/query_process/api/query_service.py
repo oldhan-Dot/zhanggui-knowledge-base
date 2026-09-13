@@ -96,7 +96,7 @@ async def query(background_task:BackgroundTasks,request: QueryRequest):
 @app.get("/stream/{session_id}")
 async def stream(session_id: str,request:Request):
     return StreamingResponse(
-        sse_generator(session_id),
+        sse_generator(session_id,request),
         media_type="text/event_stream",
         headers={
             "Cache-Control": "no-cache",
