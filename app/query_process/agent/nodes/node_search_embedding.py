@@ -29,7 +29,7 @@ def node_search_embedding(state: QueryGraphState):
     item_names = state["item_names"]
     #判断item_names是否存在
     if not item_names:
-        logger.warnings("item_names 为空")
+        logger.warning("item_names 为空")
         return {"embedding": {}}
     #将written_query转换为向量
     embeddings = generate_embeddings([rewritten_query])

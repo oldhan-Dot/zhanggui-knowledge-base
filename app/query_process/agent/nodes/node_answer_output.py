@@ -220,7 +220,7 @@ def node_answer_output(state: QueryGraphState):
         step_4_write_history(state, image_urls=image_urls)
         push_to_session(
             state["session_id"],
-            SSEEvent.DELTA,
+            SSEEvent.FINAL,
             {
                 "answer": state["answer"],
                 "image_urls": image_urls, # 发送图片URL给前端

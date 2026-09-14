@@ -123,7 +123,7 @@ async def history(session_id : str,limit:int=10):
         raise HTTPException(status_code=500, detail=f"history error: {e}")
 
 #清空历史会话
-@app.delete("/delete/{session_id}")
+@app.delete("/history/{session_id}")
 async def clear_chat_history(session_id : str):
     count = clear_history(session_id)
     return {"message": "History cleared", "deleted_count": count}
