@@ -11,3 +11,11 @@ wheels/
 
 .env
 output
+.idea
+doc
+fastapi
+logs
+test
+.python-version
+sse
+src/knowledge_base
