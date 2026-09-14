@@ -26,8 +26,11 @@
 - [系统架构](#系统架构)
 - [导入流水线：7 个节点](#导入流水线7-个节点)
 - [双层索引设计](#双层索引设计)
+- [检索流水线：7 个节点](#检索流水线7-个节点)
+- [问答链路的关键设计](#问答链路的关键设计)
 - [状态定义](#状态定义)
-- [Web 服务与前端对接](#web-服务与前端对接)
+- [导入 Web 服务与前端对接](#导入-web-服务与前端对接)
+- [问答 Web 服务与 SSE 流式](#问答-web-服务与-sse-流式)
 - [快速开始](#快速开始)
 - [目录结构](#目录结构)
 - [关键设计决策](#关键设计决策)
@@ -42,6 +45,8 @@
 
 企业积累了大量产品手册（PDF / Markdown），传统方式靠人工检索、关键词搜索，效率低且看不懂图片内容。本项目把文档加工成**可语义检索的向量知识库**，并支持多模态（图片也能被检索到）。
 
+系统由两条独立的 LangGraph 流水线组成：**导入流水线**负责把文档加工入库，**检索流水线**负责把用户提问变成带出处、可追问的答案。
+
 ### 核心价值
 
 | 能力 | 说明 |
@@ -51,6 +56,10 @@
 | **语义切片** | 标题层级初切 + 递归二次切分，每个切片自带"页眉"，切碎了也不丢上下文 |
 | **双层索引** | 商品级粗筛（`kb_item_names`）+ 切片级精搜（`kb_chunks`） |
 | **混合检索** | 稠密向量（语义泛化）+ 稀疏向量（关键词精准），加权融合召回 |
+| **多路召回 + RRF** | 向量检索 + HyDE + 联网搜索三路互补，按「名次」融合而非分数相加 |
+| **交叉编码器精排** | `bge-reranker-large` 逐对重打分 + 动态 TopK（断崖检测） |
+| **多轮对话** | 指代消解把「它」补全成具体商品，历史存在 MongoDB |
+| **流式问答** | SSE 打字机效果，答案附出处与图片；一个 `session_id` 一条独立通道 |
 | **异步导入** | FastAPI `BackgroundTasks` + 任务状态机，长任务不阻塞、进度实时可见 |
 
 ---
@@ -59,9 +68,11 @@
 
 | 模块 | 状态 | 说明 |
 |------|------|------|
-| **导入流水线（知识库构建）** | 已完成 | 7 个节点端到端跑通，本 README 重点覆盖 |
-| **Web 上传服务 + 前端页面** | 已完成 | `/upload` `/status/{task_id}` `/import.html` |
-| **检索流水线（智能问答）** | 待补充 | 节点代码已就位，README 文档后续补充 |
+| **导入流水线（知识库构建）** | 已完成 | 7 个节点端到端跑通 |
+| **导入 Web 服务 + 前端页面** | 已完成 | `/upload` `/status/{task_id}` `/import.html`（轮询进度） |
+| **检索流水线（智能问答）** | 已完成 | 7 个节点：指代消解 → 三路召回 → RRF 融合 → 动态 TopK 重排序 → 生成 |
+| **问答 Web 服务 + SSE 流式** | 已完成 | `/query` `/stream/{session_id}` `/chat.html`（打字机效果） |
+| **双层索引** | 已完成 | 商品级粗筛 `kb_item_names` + 切片级精搜 `kb_chunks` |
 
 ---
 
@@ -93,9 +104,11 @@
 | 技术 | 用途 | 文档 |
 |------|------|------|
 | [BGE-M3](https://github.com/FlagOpen/FlagEmbedding) | 向量化模型，同时输出稠密 + 稀疏向量 | [GitHub](https://github.com/FlagOpen/FlagEmbedding) · [Model](https://huggingface.co/BAAI/bge-m3) |
+| [BGE-Reranker-Large](https://huggingface.co/BAAI/bge-reranker-large) | 交叉编码器，对召回候选逐对精排 | [Model](https://huggingface.co/BAAI/bge-reranker-large) |
 | [MinerU](https://github.com/opendatalab/MinerU) | PDF 高精度解析（云端 API） | [Docs](https://mineru.readthedocs.io/) |
 | [阿里云百炼](https://bailian.console.aliyun.com/) | 大模型服务（Qwen 系列，OpenAI 兼容模式） | [兼容 API 文档](https://help.aliyun.com/zh/model-studio/compatibility-of-openai-with-dashscope) |
 | [Qwen3-VL-Flash](https://help.aliyun.com/zh/model-studio/models) | 视觉大模型，生成图片中文描述 | [Docs](https://help.aliyun.com/zh/model-studio/models) |
+| [MCP](https://modelcontextprotocol.io/) | 模型上下文协议，接入百炼联网搜索工具 | [Docs](https://modelcontextprotocol.io/) |
 
 ### 工程化
 
@@ -147,6 +160,8 @@
    │ 向量库  │        │  图床    │       │ / VLM    │
    └─────────┘        └──────────┘       └──────────┘
 ```
+
+> 上图是**导入侧**（建库）的架构。**问答侧**（检索 + 生成）是另一条独立的 LangGraph 流水线，详见 [检索流水线：7 个节点](#检索流水线7-个节点)。
 
 ---
 
@@ -251,9 +266,38 @@ class ImportGraphState(TypedDict):
 | 6 `node_bge_embedding` | 每个 chunk 的 `dense_vector` / `sparse_vector` |
 | 7 `node_import_milvus` | 写入 Milvus（state 不再变化） |
 
+### 检索流程：`QueryGraphState`
+
+> 源码：`app/query_process/agent/state.py`
+
+```python
+class QueryGraphState(TypedDict):
+    session_id: str                  # 会话唯一标识
+    original_query: str              # 用户原始问题（保留原话，供落库与兜底）
+    # --- 三路召回 ---
+    embedding_chunks: list           # Embedding 路召回结果
+    hyde_embedding_chunks: list      # HyDE 路召回结果
+    web_search_docs: list            # 联网搜索结果
+    # --- 排序 ---
+    rrf_chunks: list                 # RRF 融合后的切片
+    reranked_docs: list              # 重排序后的最终 Top-K
+    # --- 生成 ---
+    prompt: str                      # 组装好的 Prompt
+    answer: str                      # 最终答案（也承载「反问 / 拒答」话术）
+    # --- 辅助 ---
+    item_names: List[str]            # 提取 / 确认的商品名
+    rewritten_query: str             # 改写后的问题
+    history: list                    # 历史对话快照
+    is_stream: bool                  # 是否流式输出
+```
+
+同样提供 `create_query_default_state(**overrides)`（深拷贝 + 覆盖）与 `copy_query_state`，保证多任务之间互不污染。
+
+`answer` 有「双重身份」：既承载最终生成的答案，也是**条件边的判据**——非空即表示流程已在澄清阶段结束，无需再检索。
+
 ---
 
-## Web 服务与前端对接
+## 导入 Web 服务与前端对接
 
 > 源码：`app/import_process/api/file_import_service.py` · 页面：`app/import_process/page/import.html`
 
@@ -335,6 +379,271 @@ const timer = setInterval(async () => {
 
 ---
 
+## 检索流水线：7 个节点
+
+> 源码：`app/query_process/agent/nodes/` · 图组装：`app/query_process/agent/main_graph.py`
+
+用户提问进入后，先做「意图澄清」，再并行三路召回，最后融合、精排、生成：
+
+```
+                          用户问题
+                             │
+                             ▼
+        ┌────────────────────────────────────────┐
+        │ node_item_name_confirm                 │  ① 指代消解 + 主体对齐
+        │   历史 → LLM 抽取 item_names / 改写问题  │
+        │   向量检索 kb_item_names → 阈值判定      │
+        └───────────────────┬────────────────────┘
+                            │ 条件边 condition_fun
+              ┌─────────────┴─────────────┐
+              │ state["answer"] 有值？     │
+              │  有 → 直接输出反问/拒答     │
+              │  无 → 三路并行召回          │
+              └─────────────┬─────────────┘
+        ┌──────────────┬────┴──────────────┐
+        ▼              ▼                   ▼
+  node_search_    node_search_       node_web_search_mcp
+  embedding       embedding_hyde       （百炼 MCP 联网）
+  改写问题检索      假设性文档检索
+        └──────────────┴────┬──────────────┘
+                            ▼
+                   ┌─────────────────┐
+                   │ node_rrf        │  ② RRF 融合（仅同源两路）
+                   └────────┬────────┘
+                            ▼
+                   ┌─────────────────┐
+                   │ node_rerank     │  ③ 交叉编码器精排 + 动态 TopK
+                   └────────┬────────┘
+                            ▼
+                   ┌─────────────────┐
+                   │ node_answer_    │  ④ 拼 Prompt → LLM → 答案 + 出处/图片
+                   │ output          │
+                   └─────────────────┘
+```
+
+| # | 节点 | 作用 | 关键产出 |
+|---|------|------|---------|
+| 1 | `node_item_name_confirm` | 指代消解 + 商品名对齐：读历史 → LLM 抽取/改写 → `kb_item_names` 检索 → 阈值判定，三选一：确认 / 反问 / 未找到 | `item_names`、`rewritten_query`、`history`；或 `answer`（反问/拒答） |
+| 2 | `node_search_embedding` | 用 `rewritten_query` 向量 + `item_name` 过滤，检索 `kb_chunks` | `embedding_chunks` |
+| 3 | `node_search_embedding_hyde` | HyDE：先让 LLM 编一段「假设答案」，再拿它 + 原问题去检索 | `hyde_embedding_chunks` |
+| 4 | `node_web_search_mcp` | 经百炼 MCP 调用联网搜索，补充库外信息 | `web_search_docs` |
+| 5 | `node_rrf` | 对**同源的两路**（Embedding + HyDE）做 RRF 倒数排名融合，去重后截断 | `rrf_chunks` |
+| 6 | `node_rerank` | 合并 `rrf_chunks` + `web_search_docs`，用 `bge-reranker-large` 逐对打分，动态 TopK 截断 | `reranked_docs` |
+| 7 | `node_answer_output` | 组装 Prompt（参考内容 + 历史 + 主体 + 问题）→ LLM 生成（支持流式）→ 提取图片 | `prompt`、`answer`；SSE 事件 |
+
+### 条件路由：先判断「要不要往下检索」
+
+`node_item_name_confirm` 之后是一条条件边，由 `state["answer"]` 决定去向：
+
+```python
+def condition_fun(state: QueryGraphState):
+    if state["answer"]:
+        return "node_answer_output"       # 澄清阶段已生成反问/拒答 → 直接输出
+    else:
+        return "node_search_embedding", "node_search_embedding_hyde", "node_web_search_mcp"
+        #                                     ↑ 返回多个目标 = 三路并行
+```
+
+- **`answer` 非空** → `node_item_name_confirm` 走了「反问用户」或「未找到」，此时没有商品名可检索，直接把这句话交给输出节点。
+- **`answer` 为空** → 主体已确认，三路检索并行开跑。
+
+> 三条边汇入 `node_rrf`：LangGraph 会**等三个上游全部完成**再把 `node_rrf` 执行一次——这保证 web 结果在进入 `node_rerank` 之前已写入 state。
+
+### 节点 1 内部：`node_item_name_confirm` 的 7 个 step
+
+| step | 做了什么 |
+|------|---------|
+| 1 `get_recent_messages` | 读该会话最近历史（**快照，不含本轮问题**） |
+| 2 `save_chat_message(user)` | 先落库占位，拿到 `message_id`（供 step 7 回填） |
+| 3 `step_3_extract_info` | LLM（`json_mode`）产出 `item_names` + `rewritten_query` |
+| 4 `step_4_vectorize_and_query` | 对每个 `item_name` 向量化 → `kb_item_names` 混合检索 Top5 |
+| 5 `step_5_align_item_names` | 阈值对齐：`≥0.85` 确认 / `0.6~0.85` 候选 |
+| 6 `step_6_check_confirmation` | 三分支：确认 → 回填历史 `item_names`；候选 → 反问；都没有 → 未找到 |
+| 7 `step_7_write_history` | 有 `answer` 则存一条 assistant；再用 `message_id` 回填当前 user 消息 |
+
+**双层索引正是在这里「接力」**：先拿 `item_name` 去 `kb_item_names` 定位主体，确认后才用 `rewritten_query` 去 `kb_chunks` 检索内容。
+
+---
+
+## 问答链路的关键设计
+
+### 1. 指代消解（Query Rewriting）
+
+多轮对话里用户会说「**它**怎么用」，这句话单独拿去做向量检索必然失焦——向量里没有任何商品信息。所以 `node_item_name_confirm` 先用 LLM 结合历史把句子补全：
+
+```
+原始："它的电池怎么样"             ← 语义残缺，检索必挂
+改写："华为Mate60的电池续航怎么样"   ← 独立完整，可直接向量化
+```
+
+同一个 LLM 调用顺带产出两个字段，各管一段：
+
+- **`item_names`** 回答「问的是哪个商品」→ 拿去查商品名表 (`kb_item_names`)
+- **`rewritten_query`** 回答「问的是什么事」→ 拿去查切片表 (`kb_chunks`)
+
+### 2. 三路召回，各司其职
+
+| 路 | 查询方式 | 定位 | 是否进 RRF |
+|---|---------|------|-----------|
+| Embedding | `rewritten_query` 向量 | 语义最贴近的切片 | ✅ |
+| HyDE | `rewritten_query + 假设性文档` 向量 | 换个角度再召一遍，弥补措辞差异 | ✅ |
+| Web 搜索 | 百炼 MCP 联网 | 补充知识库外的最新信息 | ❌ 旁路给 rerank |
+
+HyDE 的思路是：**先让 LLM 编一个「看起来像标准答案」的段落，再用它去检索**——因为「问题」和「答案」在向量空间里的分布并不一致，用假答案去搜，往往更容易命中真答案。
+
+### 3. RRF 融合：为什么只能融同源两路
+
+```python
+score_map[chunk_id] = score_map.get(chunk_id, 0) + weight * (1.0 / (rank + k))
+chunk_map.setdefault(chunk_id, chunk)      # 同一 chunk 只保留第一次出现的文档
+```
+
+RRF 的「融合」依赖 `chunk_id` 对齐——**同一个切片在多路里都出现，分数才累加**：
+
+- Embedding 路与 HyDE 路查的都是 `kb_chunks`，共享同一套 `chunk_id` → **可以对齐**
+- Web 搜索返回的是 `{title, url, snippet}`，**没有 chunk_id** → 无法参与融合，硬塞进去只会被 `continue` 跳过、留下一屏警告日志
+
+所以 `node_rrf` 只读两路**是正确的设计**；web 结果走旁路，在 `node_rerank` 里与 RRF 结果一起参与精排。
+
+`k=60` 的作用是**平滑名次差异**：`1/rank` 时第 1 名是第 2 名的 2 倍，而 `1/(60+rank)` 两者只差约 1.6%。分母加上 `k` 后，前几名不再是压倒性优势——**「多路都排前面」比「单路第一」更重要**，这正是融合的意义。
+
+### 4. 重排序：双塔 vs 交叉编码器
+
+向量检索用的是**双塔模型**：query 和 doc 各走各的编码器，最后比向量距离——两者从未「见面」，精度有限。`bge-reranker-large` 是**交叉编码器**，把 `[query, doc]` 拼成一个序列送进模型，注意力能在两者之间直接流转，判断精细得多。
+
+代价是慢（每对候选都要跑一次完整前向），所以只能放在召回之后做精排：
+
+```
+稠密 + 稀疏混合检索（粗筛）
+        ↓
+RRF 融合去重（≤10 条）
+        ↓
+bge-reranker-large 逐对打分（精排）
+        ↓
+动态 TopK → 交给 LLM
+```
+
+### 5. 动态 TopK：用「断崖」代替拍脑袋定数字
+
+`node_rerank` 不机械取前 5 条，而是检测**相邻分数的落差**：
+
+```python
+RERANK_MAX_TOPK  = 10      # 硬上限
+RERANK_MIN_TOPK  = 1       # 保底（至少留 1 条）
+RERANK_GAP_ABS   = 0.5     # 绝对落差阈值
+RERANK_GAP_RATIO = 0.25    # 相对落差阈值
+```
+
+逐个比较相邻两条的分数差，**一旦出现断崖（绝对差 > 0.5，或相对差 > 25%）就截断**：
+
+```
+[0.90, 0.88, 0.85, 0.30, 0.28]   → 0.85 → 0.30 断崖 → 只取前 3 条
+[0.90, 0.88, 0.85, 0.83, 0.80]   → 平滑下降      → 取满
+```
+
+分数分布陡峭就少取（后面的明显不相关），分布平缓就多取——**用数据的自然分界决定留几条**。
+
+### 6. Prompt 组装与出处标注
+
+`node_answer_output` 把检索结果渲染成带元信息的块交给 LLM：
+
+```
+[1][local] chunk_id=[4688...] [score=0.9521] title=[设备]
+·	请勿拆解本设备，内部没有用户可维修的部件。
+
+[2][web] [score=0.8732] title=[烫金机日常维护]
+日常维护时需先断电……
+```
+
+- `[source]` 区分 `local`（库内切片）/ `web`（联网结果）
+- `chunk_id` / `score` / `title` 供模型引用与人工核查
+- 整个上下文受 `MAX_CONTEXT_CHARS = 12000` 约束，超长自动截断
+
+Prompt（`prompts/answer_out.prompt`）明确要求**只根据参考内容作答、不要编造**，并在需要时按固定格式追加 `【图片】` 区块。答案中的图片 URL 由 `_extract_images_from_docs` 用正则从切片正文中提取。
+
+---
+
+## 问答 Web 服务与 SSE 流式
+
+> 源码：`app/query_process/api/query_service.py` · 页面：`app/query_process/page/chat.html` · SSE 工具：`app/utils/sse_utils.py`
+
+### 接口一览
+
+| 方法 | 路径 | 作用 | 返回值 |
+|------|------|------|--------|
+| `GET` | `/chat.html` | 返回对话页面 | HTML |
+| `POST` | `/query` | 提交问题：**流式立即回 `session_id`**，非流式同步返回答案 | `{"message", "session_id"[, "answer"]}` |
+| `GET` | `/stream/{session_id}` | 建立 SSE 长连接，推送事件 | `text/event-stream` |
+| `GET` | `/status/{task_id}` | 查询节点进度（轮询兜底） | `{status, running_list, done_list}` |
+| `GET` | `/history/{session_id}` | 拉取最近历史 | `{"session_id", "items"}` |
+| `DELETE` | `/delete/{session_id}` | 清空该会话历史 | `{"message", "deleted_count"}` |
+| `GET` | `/health` | 健康检查 | `{"ok": true}` |
+
+> `/query` 用 **POST 而非 GET**：提问内容与 `session_id` 不该出现在 URL 里（会被写进浏览器历史、服务器 access log）。
+
+### 流式 vs 非流式：两条交付路径
+
+| | 流式（`is_stream=true`） | 非流式（`is_stream=false`） |
+|---|---|---|
+| 执行方式 | `BackgroundTasks` 丢后台，接口**立即返回** | 同步阻塞，跑完才返回 |
+| 答案怎么给 | 走 SSE 长连接逐字推送 | 直接塞进响应 JSON 的 `answer` |
+| `return` 里有答案吗 | ❌ 只有 `session_id` | ✅ 有（等完了） |
+
+非流式必须**原地等**：答案要装在这次 HTTP 响应里带回去。若改成后台任务，`return` 那一刻答案还没生成，只能返回空。
+
+### SSE 事件表
+
+| event | 谁发的 | data | 前端处理 |
+|-------|--------|------|---------|
+| `ready` | `sse_generator` | `{}` | 确认连接已建立 |
+| `progress` | `task_utils.task_push_queue` | `{status, done_list, running_list}` | 更新进度条与节点日志 |
+| `delta` | `node_answer_output`（生成中） | `{"delta": "一个字"}` | **追加**到气泡（打字机效果） |
+| `delta`（收尾帧） | `node_answer_output`（结束后） | `{"answer": "完整答案", "image_urls": [...]}` | **赋值**完整答案 + 渲染图片 |
+| `error` | 后台任务异常 / 生成异常 | `{"error": "异常文本"}` | 显示失败原因 |
+
+> ⚠️ 收尾帧与增量帧共用 `delta` 事件名：前端 `delta` 回调只读 `d.delta`，因此这条收尾帧不会被渲染；而 `chat.html` 里注册的 `final` / `final_answer` 监听器后端尚未发出。把收尾帧改用 `SSEEvent.FINAL` 即可打通最后一帧。
+
+### 断连检测：`request.is_disconnected()`
+
+SSE 是长连接，服务端生成器会一直循环推消息。如果用户关了页面而服务端不知道，这个循环会**永远空转**，占着连接和队列不放。`sse_generator` 每轮先探测一次：
+
+```python
+while True:
+    if await request.is_disconnected():   # 前端还在吗
+        break                             # 断了就退出
+    ...
+```
+
+`finally` 中再 `remove_sse_queue(session_id)` 清理队列。这也是 `/stream` 路径函数必须声明 `request: Request` 的原因。
+
+### 前端会话与事件订阅
+
+```javascript
+// ① session_id 存在 localStorage —— 关浏览器也保留，下次打开仍是同一会话
+let sessionId = localStorage.getItem('kb_session_id');
+if (!sessionId) {
+  sessionId = 'sess-' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+  localStorage.setItem('kb_session_id', sessionId);
+}
+
+// ② 提问 → 拿 session_id → 开 SSE 专线
+const res = await fetch(`${API_BASE}/query`, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ query: text, session_id: sessionId, is_stream: true })
+});
+const { session_id } = await res.json();
+
+const es = new EventSource(`${API_BASE}/stream/${session_id}`);
+es.addEventListener('delta', e => { /* 逐字追加到气泡 */ });
+es.addEventListener('final', e => { /* 收尾：完整答案 + 图片 + es.close() */ });
+es.addEventListener('error', e => { /* 展示错误信息 */ });
+```
+
+一个 `session_id` 对应一个队列（`_session_stream: Dict[str, Queue]`），保证「谁的问题答案进谁的气泡」——多人同时提问不会串台。
+
+---
+
 ## 快速开始
 
 ### 1. 环境要求
@@ -411,6 +720,11 @@ BGE_M3_PATH=D:/ai_models/bge-m3
 BGE_DEVICE=cpu          # GPU 改成 cuda:0
 BGE_FP16=0              # GPU 改成 1
 
+# ===== Reranker（BGE-Reranker-Large，问答链路精排）=====
+BGE_RERANKER_LARGE=D:/ai_models/BAAI/bge-reranker-large
+BGE_RERANKER_DEVICE=cpu      # GPU 改成 cuda:0
+BGE_RERANKER_FP16=0          # GPU 改成 1
+
 # ===== Milvus =====
 MILVUS_URL=http://127.0.0.1:19530
 CHUNKS_COLLECTION=kb_chunks
@@ -428,6 +742,9 @@ MINIO_SECURE=False
 # ===== MinerU（PDF 解析）=====
 MINERU_API_TOKEN=你的MinerU Token
 MINERU_BASE_URL=https://mineru.net/api/v4
+
+# ===== MCP（百炼联网搜索，问答链路第三路召回）=====
+MCP_DASHSCOPE_BASE_URL=https://dashscope.aliyuncs.com/api/v1/mcps/WebSearch/mcp
 ```
 
 > `.env` 已在 `.gitignore` 中，**请勿提交真实密钥**。
@@ -435,18 +752,32 @@ MINERU_BASE_URL=https://mineru.net/api/v4
 ### 5. 启动服务
 
 ```bash
+# 终端 1：导入服务（上传文档建库）
 uv run uvicorn app.import_process.api.file_import_service:app --host 127.0.0.1 --port 8000 --reload
+
+# 终端 2：问答服务（检索 + 生成 + SSE 流式）
+uv run uvicorn app.query_process.api.query_service:app --host 127.0.0.1 --port 8001 --reload
 ```
 
-浏览器打开：<http://127.0.0.1:8000/import.html>
+| 服务 | 端口 | 页面 |
+|------|------|------|
+| 导入服务 | 8000 | <http://127.0.0.1:8000/import.html> |
+| 问答服务 | 8001 | <http://127.0.0.1:8001/chat.html> |
+
+> 问答服务依赖 MongoDB（会话历史）与 Milvus（向量检索），启动前确认两者都已运行。
 
 ### 6. 单节点调试
 
 每个节点文件底部都有 `if __name__ == "__main__":` 测试入口，可直接运行：
 
 ```bash
+# 导入链
 uv run python -m app.import_process.agent.nodes.node_item_name_recognition
 uv run python -m app.import_process.agent.nodes.node_document_split
+
+# 检索链
+uv run python -m app.query_process.agent.nodes.node_rrf
+uv run python -m app.query_process.agent.nodes.node_web_search_mcp
 ```
 
 ---
@@ -471,7 +802,13 @@ knowledge_base/
 │   │   │   └── nodes/              #     7 个节点
 │   │   ├── api/file_import_service.py  # FastAPI 服务
 │   │   └── page/import.html        #     上传页面
-│   ├── query_process/              # 【检索模块】节点已就位
+│   ├── query_process/              # 【检索模块】
+│   │   ├── agent/
+│   │   │   ├── main_graph.py       #     LangGraph 图组装 + 条件边
+│   │   │   ├── state.py            #     QueryGraphState 定义
+│   │   │   └── nodes/              #     7 个节点（对齐/三路召回/RRF/重排/生成）
+│   │   ├── api/query_service.py    #     FastAPI 服务（含 SSE 流式）
+│   │   └── page/chat.html          #     问答页面
 │   ├── lm/
 │   │   ├── lm_utils.py             #   LLM 客户端（带缓存）
 │   │   ├── embedding_utils.py      #   BGE-M3 向量化
@@ -547,6 +884,46 @@ RAG 只能检索文本，图片是"哑巴证人"。用 VLM 把图片翻译成中
 <summary><b>6. 提示词外置</b></summary>
 
 `prompts/*.prompt` 文件存放模板，用 `load_prompt(name, **kwargs)` 渲染占位符——改提示词不用改代码。
+
+</details>
+
+<details>
+<summary><b>7. 先定位主体，再检索内容</b></summary>
+
+如果直接拿用户问题去检索，问题里既有「商品」又有「意图」，向量语义会被两者平均，容易失焦。
+
+所以拆成两步：**先用 `item_name` 去 `kb_item_names` 确认「问的是哪个商品」，再用 `rewritten_query` 去 `kb_chunks` 找「哪几段内容」**。前者是短文本精确对齐，后者是长文本语义匹配——各用各的长处。
+
+</details>
+
+<details>
+<summary><b>8. RRF 只融「同源」数据</b></summary>
+
+RRF 靠 `chunk_id` 判断「是不是同一条」，同一 chunk 在多路出现才累加分数。Embedding 与 HyDE 两路查的都是 `kb_chunks`，天然同源；Web 搜索返回网页、没有 chunk_id，**强行塞进 RRF 只会被静默跳过**。
+
+这也是为什么图里三条边汇入 `node_rrf`，但 `node_rrf` 只读两路——第三条边的作用是「等 web 写完 state」，让它赶上后面的 rerank。
+
+</details>
+
+<details>
+<summary><b>9. 动态 TopK：让数据决定留几条</b></summary>
+
+固定 Top-5 有两个问题：分数都很高时会漏掉本该留下的，分数断崖式下跌时又会混进明显不相关的。改成**检测相邻分数的落差**后，由数据本身决定截断点，同时用 `MIN_TOPK=1` 保底、`MAX_TOPK=10` 封顶。
+
+</details>
+
+<details>
+<summary><b>10. 一个图，两种交付：`is_stream` 贯穿全链路</b></summary>
+
+`is_stream` 不是 HTTP 层的开关，而是**从接口一路传到节点**的标记：
+
+| 位置 | 它决定什么 |
+|------|-----------|
+| `/query` | 走后台任务（流式）还是同步阻塞（非流式） |
+| `task_utils.add_*_task` | 是否顺手推一条 `progress` SSE 事件 |
+| `node_answer_output` | 用 `llm.stream()` 逐字推，还是 `llm.invoke()` 一次拿 |
+
+**同一个图、同一套节点，只靠这个标记切换交付方式**，逻辑不用重写两份。
 
 </details>
 
@@ -655,11 +1032,13 @@ BGE-M3 稀疏向量是 CSR 矩阵，索引是 `numpy.int64`，直接做字典 ke
 
 ## 后续计划
 
-- [ ] **检索模块文档**：`node_item_name_confirm` → `search_embedding` → `hyde` → `web_search_mcp` → `rrf` → `rerank` → `answer_output`
-- [ ] RRF 融合与 Rerank 精排的调参说明
-- [ ] SSE 流式输出的前端接入
+- [ ] **检索参数调参实验**：RRF 的 `k`、各路口召回条数、断崖阈值的对比数据
+- [ ] **评测集**：问答准确率 / 召回率的量化报告（有数据才叫工程）
+- [ ] 统一 SSE 收尾事件名（收尾帧由 `delta` 改为 `final`），打通最后一条完整答案与图片
+- [ ] 多路召回的第三路 BM25，与 BGE-M3 稀疏向量做效果对比
+- [ ] 会话管理：前端「新建对话」入口（当前 `session_id` 固定存在 `localStorage`）
 - [ ] 导入接口支持 ZIP 批量上传（自动解压 `md + images/`）
-- [ ] 任务状态持久化（Redis / Celery）
+- [ ] 任务状态持久化（Redis / Celery），摆脱单进程内存态
 
 ---
 
