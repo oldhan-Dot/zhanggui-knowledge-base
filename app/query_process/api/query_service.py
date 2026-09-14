@@ -46,7 +46,7 @@ def run_query_graph(session_id : str, query :str , is_stream : bool):
     #创建初始状态
     init_state = create_query_default_state(
         session_id=session_id,
-        origin_query=query,
+        original_query=query,
         is_stream=is_stream,
     )
     try:
@@ -97,7 +97,7 @@ async def query(background_task:BackgroundTasks,request: QueryRequest):
 async def stream(session_id: str,request:Request):
     return StreamingResponse(
         sse_generator(session_id,request),
-        media_type="text/event_stream",
+        media_type="text/event-stream",
         headers={
             "Cache-Control": "no-cache",
             "Connection": "keep-alive",

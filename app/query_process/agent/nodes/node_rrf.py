@@ -115,7 +115,7 @@ def node_rrf(state: QueryGraphState):
     rrf_chunks = [chunk for chunk,score in rrf_result]
     # 记录当前任务的状态为已完成
     add_done_task(state["session_id"], "node_rrf", state["is_stream"])
-    return state
+    return {"rrf_chunks": rrf_chunks}
 
 
 

@@ -32,11 +32,11 @@ def step_2_construct_prompt(state):
     original_query = state.get("original_query")
     rewritten_query = state.get("rewritten_query")
     question = rewritten_query if rewritten_query else original_query
-    rerank_docs = state.get("rerank_docs")
+    reranked_docs = state.get("reranked_docs")
     item_names = state.get("item_names")
-    history_list = state.get("history_list")
+    history_list = state.get("history")
     """
-    将rerank_docs中的数据格式转换为以下格式
+    将reranked_docs中的数据格式转换为以下格式
     "[1][local][chunk_id=123][score=0.95][title=操作手册]
     这里是文档的正文内容.....
     "
@@ -46,7 +46,7 @@ def step_2_construct_prompt(state):
     #创建记录最大字符数的变量
     used = 0
     #对reranked_docs进行遍历
-    for num,chunk in enumerate(rerank_docs,start=1):
+    for num,chunk in enumerate(reranked_docs,start=1):
         #从chunk中获取所需要的数据，并存储到列表中
         text = chunk.get("text")
         if not text:
@@ -157,13 +157,13 @@ def step_3_generate_response(state, prompt):
     return state
 
 
-def _extract_images_from_docs(rerank_docs):
+def _extract_images_from_docs(reranked_docs):
     #创建存储提取的图片url列表
     image_urls = []
     # 创建正则表达式
     pattern = r"!\[.*?\]\((.*?)\)"
     #对文档进行遍历
-    for doc in rerank_docs:
+    for doc in reranked_docs:
         # 获取文档中的url
         url = doc.get("url")
         #判断url是否为空
